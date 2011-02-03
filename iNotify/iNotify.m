@@ -9,9 +9,9 @@
 #import "iNotify.h"
 
 
-NSString * const iNotifyIgnoredNotificationsKey = @"iNotifyIgnoredNotificationsKey";
-NSString * const iNotifyLastCheckedVersionKey = @"iNotifyLastCheckedVersionKey";
-NSString * const iNotifyLastRemindedVersionKey = @"iNotifyLastRemindedVersionKey";
+NSString * const iNotifyIgnoredNotificationsKey = @"iNotifyIgnoredNotifications";
+NSString * const iNotifyLastCheckedVersionKey = @"iNotifyLastCheckedVersion";
+NSString * const iNotifyLastRemindedVersionKey = @"iNotifyLastRemindedVersion";
 
 NSString * const iNotifyTitleKey = @"Title";
 NSString * const iNotifyMessageKey = @"Message";

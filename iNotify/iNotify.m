@@ -270,7 +270,10 @@ static iNotify *sharedInstance = nil;
 			//go to download page
 			NSDictionary *data = [notificationsData objectForKey:[self nextNotificationInDict:notificationsData]];
 			NSString *actionURL = [data objectForKey:iNotifyActionURLKey];
-			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:actionURL]];
+			if (actionURL)
+			{
+				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:actionURL]];
+			}
 			break;
 		}
 		default:

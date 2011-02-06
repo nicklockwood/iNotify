@@ -47,15 +47,15 @@
 	01D0CCA512FCDA4F00F15064 /* iNotify.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {795, 520}}";
-			sepNavSelRange = "{632, 0}";
+			sepNavSelRange = "{1069, 8}";
 			sepNavVisRange = "{17, 1110}";
 		};
 	};
 	01D0CCA612FCDA4F00F15064 /* iNotify.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {795, 5200}}";
-			sepNavSelRange = "{2433, 0}";
-			sepNavVisRange = "{7347, 976}";
+			sepNavIntBoundsRect = "{{0, 0}, {795, 5174}}";
+			sepNavSelRange = "{7948, 0}";
+			sepNavVisRange = "{7347, 1016}";
 		};
 	};
 	01D0CCAA12FCDABF00F15064 /* PBXTextBookmark */ = {
@@ -387,6 +387,26 @@
 		vrLen = 976;
 		vrLoc = 7347;
 	};
+	01D0CFF112FEDB8F00F15064 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 256AC3D90F4B6AC300CF3369 /* iNotifyMacAppDelegate.m */;
+		name = "iNotifyMacAppDelegate.m: 20";
+		rLen = 55;
+		rLoc = 364;
+		rType = 0;
+		vrLen = 556;
+		vrLoc = 0;
+	};
+	01D0CFF212FEDB8F00F15064 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 256AC3D90F4B6AC300CF3369 /* iNotifyMacAppDelegate.m */;
+		name = "iNotifyMacAppDelegate.m: 20";
+		rLen = 55;
+		rLoc = 364;
+		rType = 0;
+		vrLen = 556;
+		vrLoc = 0;
+	};
 	256AC3D80F4B6AC300CF3369 /* iNotifyMacAppDelegate.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {795, 473}}";
@@ -472,6 +492,8 @@
 			01D0CFBB12FED96100F15064 /* PBXTextBookmark */ = 01D0CFBB12FED96100F15064 /* PBXTextBookmark */;
 			01D0CFD512FED9AD00F15064 /* PBXTextBookmark */ = 01D0CFD512FED9AD00F15064 /* PBXTextBookmark */;
 			01D0CFE012FED9D600F15064 /* PBXTextBookmark */ = 01D0CFE012FED9D600F15064 /* PBXTextBookmark */;
+			01D0CFF112FEDB8F00F15064 /* PBXTextBookmark */ = 01D0CFF112FEDB8F00F15064 /* PBXTextBookmark */;
+			01D0CFF212FEDB8F00F15064 /* PBXTextBookmark */ = 01D0CFF212FEDB8F00F15064 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 01D0CC9A12FCDA1A00F15064 /* Source Control */;
 		userBuildSettings = {

@@ -9,26 +9,31 @@
 #import <Foundation/Foundation.h>
 
 
-#define INOTIFY_NOTIFICATIONS_URL @"http://charcoaldesign.co.uk/iNotify/notifications.plist"
-
-#define INOTIFY_CHECK_PERIOD 0.5 //measured in days
-#define INOTIFY_REMIND_PERIOD 1 //measured in days
-
-#define INOTIFY_OK_BUTTON @"OK"
-#define INOTIFY_IGNORE_BUTTON @"Ignore"
-#define INOTIFY_REMIND_BUTTON @"Remind Me Later"
-#define INOTIFY_DEFAULT_ACTION_BUTTON @"More..."
-
-#define INOTIFY_DEBUG YES //always shows notification alert
-
-
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 @interface iNotify : NSObject<UIAlertViewDelegate>
 #else
 @interface iNotify : NSObject
 #endif
 
-+ (void)appLaunched;
-+ (void)appEnteredForeground;
++ (iNotify *)sharedInstance;
+
+//notifications url - always set this
+@property (nonatomic, retain) NSString *notificationsPlistURL;
+
+//frequency settings - these have sensible defaults
+@property (nonatomic, assign) BOOL showOldestFirst;
+@property (nonatomic, assign) BOOL showOnFirstLaunch;
+@property (nonatomic, assign) float checkPeriod;
+@property (nonatomic, assign) float remindPeriod;
+
+//message text, you may wish to customise these, e.g. for localisation
+@property (nonatomic, retain) NSString *okButtonLabel;
+@property (nonatomic, retain) NSString *ignoreButtonLabel;
+@property (nonatomic, retain) NSString *remindButtonLabel;
+@property (nonatomic, retain) NSString *defaultActionButtonLabel;
+
+//debugging and disabling
+@property (nonatomic, assign) BOOL disabled;
+@property (nonatomic, assign) BOOL debug;
 
 @end

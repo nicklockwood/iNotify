@@ -14,10 +14,16 @@
 
 @synthesize window;
 
++ (void)initialize
+{
+	//configure iNotify
+	[iNotify sharedInstance].notificationsPlistURL = @"http://charcoaldesign.co.uk/iNotify/notifications.plist";
+	[iNotify sharedInstance].debug = YES;
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	//initialise iNotify
-	[iNotify appLaunched];
+	//not used
 }
 
 @end

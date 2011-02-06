@@ -1,7 +1,7 @@
 Purpose
 --------------
 
-iNotify is a simple library that allows you to "push" notifications to users of your iPhone or Mac App Store apps that pop up when they open the app. Unlike Apple's built-in push notifications API, these do not appear when the app isn't running, but they require very little in terms of server-side infrastructure or configuration - you simply place a file on some hosted web space somewhere and update it when needed.
+iNotify is a simple library that allows you to "push" notifications to users of your iPhone or Mac App Store apps that pop up when they open the app. Unlike Apple's built-in push notifications API, these do not appear when the app isn't running (technically, they are pulled by the app rather than pushed), but they require very little in terms of server-side infrastructure or configuration - you simply place a file on some hosted web space somewhere and update it when needed.
 
 The notifications consist of a title, message and optionally a button that sends the user to a URL that can be specified on a per-message basis. 
 
@@ -17,29 +17,17 @@ Installation
 
 To install iNotify into your app, drag the iNotify.h and .m files into your project.
 
-To enable iNotify in your application, add a call to [iNotify appLaunched] to your app delegate's applicationDidFinishLaunching method, and (on the iPhone only) add a call to [iNotify appEnteredForeground] to the applicationWillEnterForeground method. The resultant code will look something like this:
+To enable iNotify in your application you need to instantiate and configure iNotify *before* the app has finished launching. The easiest way to do this is to add the iNotify configuration code in your AppDelegate's initialize method, like this:
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{    
-    // Override point for customization after application launch.
-
-    // Add the view controller's view to the window and display.
-    [self.window addSubview:viewController.view];
-    [self.window makeKeyAndVisible];
-	
-	//iNotify init
-	[iNotify appLaunched];
-
-    return YES;
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
++ (void)initialize
 {
-	//iNotify init
-	[iNotify appEnteredForeground];
+	//configure iNotify
+	[iNotify sharedInstance].notificationsPlistURL = @"http://example.com/notifications.plist";
 }
 
-You will need to place a plist containing your notification on a web-facing server somewhere. If your app is popular this will get quite a bit of traffic so make sure the server is ready to support that. The format of the plist is as follows:
+The above code represents the minimum configuration needed to make iNotify work, although there are other configuration options you may wish to add (documented below).
+
+You will need to place a plist containing your notification on a web-facing server somewhere. The format of the plist is as follows:
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -69,7 +57,7 @@ You will need to place a plist containing your notification on a web-facing serv
 
 The root node of the plist is a dictionary containing one or more key/item pairs. Each item represents a particular notification message.
 
-The key for each value can be anything, but best practice is probably to use a date in the form YYYY/MM/DD. The reason for this is that the messages will be displayed in reverse-alphanumeric sorting order by key, so by using dates like this, your messages will be shown in reverse chronological order each time the app is launched, starting with the newest.
+The key for each value can be anything, but best practice is to use a date in the form YYYY/MM/DD. The reason for this is that the messages will be displayed in reverse-alphanumeric sorting order by key, so by using dates like this, your messages will be shown in reverse chronological order each time the app is launched, starting with the newest (you can configure iNotify to show them oldest-first instead if you prefer).
 
 If you are likely to send more than one message per day, you may wish to adjust the naming scheme by adding the time or an extra digit to the end of the date, or adopt a different scheme such as keying each message with an ascending digit or letter sequence.
 
@@ -90,25 +78,30 @@ Note that the ActionURL can be used to launch other apps, or to trigger behaviou
 Configuration
 --------------
 
-To configure iNotify, there are a number of constants in the iNotify.h file
-that can alter the behaviour and appearance. These should be mostly self-
+To configure iNotify, there are a number of properties of the iNotify class that can alter the behaviour and appearance. These should be mostly self-
 explanatory, but key ones are documented below:
 
-INOTIFY_NOTIFICATIONS_URL - This is the URL that iNotify will check for new notification messages. For testing purposes, you may wish to create a separate copy of the file at a different address and use a build constant to switch which version the app points at.
+notificationsPlistURL - This is the URL that iNotify will check for new notification messages. For testing purposes, you may wish to create a separate copy of the file at a different address and use a build constant to switch which version the app points at.
 
-INOTIFY_CHECK_PERIOD - Sets how frequently the app will check for new notification messages. This is measured in days but can be set to a fractional value, e.g. 0.5. Set this to a higher value to avoid excessive traffic to your server. A value of zero means the app will check every time it's launched.
+showOldestFirst - this boolean can be used to toggle whether notifications are shown newest-first (the default) or oldest-first.
 
-INOTIFY_REMIND_PERIOD - How long the app should wait before reminding a user of a notification after they select the "remind me later" option. A value of zero means the app will remind the user every launch. Note that this value supersedes the check period, so once a reminder is set, the app won't check for notifications during the reminder period, even if additional notifications are added in the meantime.
+showOnFirstLaunch - when a user first installs your app, you may not want to bombard them with popup alerts. Use this option to disable notifications from showing the first time the app launches (set to NO by default).
 
-INOTIFY_OK_BUTTON - The dismissal button label for messages that do not include an action URL.
+checkPeriod - Sets how frequently the app will check for new notification messages. This is measured in days but can be set to a fractional value. Set this to a higher value to avoid excessive traffic to your server. A value of zero means the app will check every time it's launched. Default is 0.5 days.
 
-INOTIFY_IGNORE_BUTTON - The button label for the button the user presses if they wish to dismiss a notification without visiting the associated action URL.
+remindPeriod - How long the app should wait before reminding a user of a notification after they select the "remind me later" option. A value of zero means the app will remind the user every launch. Note that this value supersedes the check period, so once a reminder is set, the app won't check for notifications during the reminder period, even if additional notifications are added in the meantime. Default is 1 day.
 
-INOTIFY_REMIND_BUTTON - The button label for the button the user presses if they don't want to view a notification URL immediately, but do want to be reminded about it in future. Set this to nil if you don't want to display the remind me button - e.g. if you don't have space on screen.
+okButtonLabel - The dismissal button label for messages that do not include an action URL.
 
-INOTIFY_DEFAULT_ACTION_BUTTON - The default text to use for the action button label if it is not specified in the notifications plist.
+ignoreButtonLabel - The button label for the button the user presses if they wish to dismiss a notification without visiting the associated action URL.
 
-INOTIFY_DEBUG - If set to YES, iNotify will always download and display the next unread message in the notifications plist when the app launches, irrespective of the INOTIFY_CHECK_PERIOD and INOTIFY_REMIND_PERIOD settings. If a message has been read or ignored then it will not display even with the INOTIFY_DEBUG setting on. To show the message again you will have to delete the app and re-install, or change the message key in the notifications.plist to a new date.
+remindButtonLabel - The button label for the button the user presses if they don't want to view a notification URL immediately, but do want to be reminded about it in future. Set this to nil if you don't want to display the remind me button - e.g. if you don't have space on screen.
+
+defaultActionButtonLabel - The default text to use for the action button label if it is not specified in the notifications plist.
+
+disabled - Set this to YES to disable checking for notifications. This is equivalent to setting the notificationsPlistURL to nil, but may be more convenient.
+
+debug - If set to YES, iNotify will always download and display the next unread message in the notifications plist when the app launches, irrespective of the checkPeriod and remindPeriod settings. WIth debug enabled, the ignore list will also be cleared out after all message have been read, so that they will continue to display from the beginning on subsequent launches.
 
 
 Example Project
@@ -116,6 +109,6 @@ Example Project
 
 When you build and run the example project for the first time, it will show an alert with a promotional message about iNotify. This is because it has downloaded the remote notifications.plist file and this was the newest message it found.
 
-Close the message and quit the app. If you relaunch, you will see nothing unless you set the INOTIFY_DEBUG to true, or set the INOTIFY_CHECK_PERIOD to 0. If you do this, you will see a new message each time the app launches until all messages in the plist have been viewed.
+Close the message and quit the app. If you relaunch, you will see nothing unless you set the debug option to true, or set the checkPeriod to 0. If you do this, you will see a new message each time the app launches until all messages in the plist have been viewed.
 
-Once the messages have been exhausted, to show the alerts again, delete the app from the simulator or set INOTIFY_DEBUG to true.
+Once the messages have been exhausted, to show the alerts again, delete the app from the simulator or set debug to true.

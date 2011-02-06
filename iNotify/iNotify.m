@@ -35,6 +35,17 @@ static iNotify *sharedInstance = nil;
 @implementation iNotify
 
 @synthesize notificationsData;
+@synthesize notificationsPlistURL;
+@synthesize showOldestFirst;
+@synthesize showOnFirstLaunch;
+@synthesize checkPeriod;
+@synthesize remindPeriod;
+@synthesize okButtonLabel;
+@synthesize ignoreButtonLabel;
+@synthesize remindButtonLabel;
+@synthesize defaultActionButtonLabel;
+@synthesize disabled;
+@synthesize debug;
 
 + (iNotify *)sharedInstance
 {
@@ -44,6 +55,46 @@ static iNotify *sharedInstance = nil;
 	}
 	return sharedInstance;
 }
+
+- (iNotify *)init
+{
+	if ((self = [super init]))
+	{
+		
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+		
+		//register for iphone application events
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(applicationLaunched:)
+													 name:UIApplicationDidFinishLaunchingNotification
+												   object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(applicationWillEnterForeground:)
+													 name:UIApplicationWillEnterForegroundNotification
+												   object:nil];
+#else
+		//register for mac application events
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(applicationLaunched:)
+													 name:NSApplicationDidFinishLaunchingNotification
+												   object:nil];
+#endif
+		//default settings
+		showOldestFirst = NO;
+		showOnFirstLaunch = NO;
+		checkPeriod = 0.5;
+		remindPeriod = 1;
+		
+		//default button text, don't edit these here; if you want to provide your
+		//own defaults then configure them using the setters/getters
+		self.okButtonLabel = @"OK";
+		self.ignoreButtonLabel = @"Ignore";
+		self.remindButtonLabel = @"Remind Me Later";
+		self.defaultActionButtonLabel = @"More...";
+	}
+	return self;
+}
+
 
 - (void)setnotificationsData:(NSDictionary *)notifications
 {
@@ -57,7 +108,7 @@ static iNotify *sharedInstance = nil;
 		[filteredNotifications removeObjectsForKeys:ignored];
 		
 		//if no un-ignored messages...
-		if (INOTIFY_DEBUG && [filteredNotifications count] == 0 && [notifications count])
+		if (debug && [filteredNotifications count] == 0 && [notifications count])
 		{
 			//reset ignore list
 			[[NSUserDefaults standardUserDefaults] setObject:nil forKey:iNotifyIgnoredNotificationsKey];
@@ -81,9 +132,17 @@ static iNotify *sharedInstance = nil;
 
 - (NSString *)nextNotificationInDict:(NSDictionary *)dict
 {
-	//return oldest notification in the dictionary, assuming notifications are keyed by date
 	NSArray *keys = [[dict allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-	return [keys lastObject];
+	if (showOldestFirst)
+	{
+		//return oldest notification in the dictionary, assuming notifications are keyed by date
+		return [keys count]? [keys objectAtIndex:0]: nil;
+	}
+	else
+	{
+		//return newest notification in the dictionary, assuming notifications are keyed by date
+		return [keys lastObject];
+	}
 }
 
 - (void)downloadednotificationsData
@@ -109,10 +168,10 @@ static iNotify *sharedInstance = nil;
 		NSString *title = [notificationData objectForKey:iNotifyTitleKey];
 		NSString *message = [notificationData objectForKey:iNotifyMessageKey];
 		NSString *actionURL = [notificationData objectForKey:iNotifyActionURLKey];
-		NSString *actionButton = [notificationData objectForKey:iNotifyActionButtonKey];
-		if (!actionButton)
+		NSString *actionButtonLabel = [notificationData objectForKey:iNotifyActionButtonKey];
+		if (!actionButtonLabel)
 		{
-			actionButton = INOTIFY_DEFAULT_ACTION_BUTTON;
+			actionButtonLabel = defaultActionButtonLabel;
 		}
 		
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
@@ -124,14 +183,14 @@ static iNotify *sharedInstance = nil;
 											  otherButtonTitles:nil];
 		if (actionURL)
 		{
-			[alert addButtonWithTitle:actionButton];
-			[alert addButtonWithTitle:INOTIFY_REMIND_BUTTON];
-			[alert addButtonWithTitle:INOTIFY_IGNORE_BUTTON];
+			[alert addButtonWithTitle:actionButtonLabel];
+			[alert addButtonWithTitle:remindButtonLabel];
+			[alert addButtonWithTitle:ignoreButtonLabel];
 			alert.cancelButtonIndex = 2;
 		}
 		else
 		{
-			[alert addButtonWithTitle:INOTIFY_OK_BUTTON];
+			[alert addButtonWithTitle:okButtonLabel];
 			alert.cancelButtonIndex = 0;
 		}
 		
@@ -143,15 +202,15 @@ static iNotify *sharedInstance = nil;
 		if (actionURL)
 		{
 			alert = [NSAlert alertWithMessageText:title
-									defaultButton:actionButton
-								  alternateButton:INOTIFY_IGNORE_BUTTON
-									  otherButton:INOTIFY_REMIND_BUTTON
+									defaultButton:actionButtonLabel
+								  alternateButton:ignoreButtonLabel
+									  otherButton:remindButtonLabel
 						informativeTextWithFormat:message];
 		}
 		else
 		{
 			alert = [NSAlert alertWithMessageText:title
-									defaultButton:INOTIFY_OK_BUTTON
+									defaultButton:okButtonLabel
 								  alternateButton:nil
 									  otherButton:nil
 						informativeTextWithFormat:message];
@@ -172,18 +231,27 @@ static iNotify *sharedInstance = nil;
 
 - (BOOL)shouldCheckForNotifications
 {
-	if (INOTIFY_DEBUG)
+	if (disabled)
+	{
+		return NO;
+	}
+	if (debug)
 	{
 		return YES;
+	}
+	if (!showOnFirstLaunch && [[NSUserDefaults standardUserDefaults] objectForKey:iNotifyIgnoredNotificationsKey] == nil)
+	{
+		[[NSUserDefaults standardUserDefaults] setObject:[NSArray array] forKey:iNotifyIgnoredNotificationsKey];
+		return NO;
 	}
 	NSDate *lastReminded = [[NSUserDefaults standardUserDefaults] objectForKey:iNotifyLastRemindedVersionKey];
 	if (lastReminded != nil)
 	{
 		//reminder takes priority over check period
-		return ([[NSDate date] timeIntervalSinceDate:lastReminded] >= (float)INOTIFY_REMIND_PERIOD * SECONDS_IN_A_DAY);
+		return ([[NSDate date] timeIntervalSinceDate:lastReminded] >= remindPeriod * SECONDS_IN_A_DAY);
 	}
 	NSDate *lastChecked = [[NSUserDefaults standardUserDefaults] objectForKey:iNotifyLastCheckedVersionKey];
-	if (lastChecked == nil || [[NSDate date] timeIntervalSinceDate:lastChecked] >= (float)INOTIFY_CHECK_PERIOD * SECONDS_IN_A_DAY)
+	if (lastChecked == nil || [[NSDate date] timeIntervalSinceDate:lastChecked] >= checkPeriod * SECONDS_IN_A_DAY)
 	{
 		return YES;
 	}
@@ -194,10 +262,10 @@ static iNotify *sharedInstance = nil;
 {
 	@synchronized (self)
 	{
-		if (INOTIFY_NOTIFICATIONS_URL)
+		if (notificationsPlistURL)
 		{
 			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-			NSDictionary *notifications = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:INOTIFY_NOTIFICATIONS_URL]];
+			NSDictionary *notifications = [NSDictionary dictionaryWithContentsOfURL:[NSURL URLWithString:notificationsPlistURL]];
 			[self performSelectorOnMainThread:@selector(setnotificationsData:) withObject:notifications waitUntilDone:YES];
 			[self performSelectorOnMainThread:@selector(updateLastCheckedDate) withObject:nil waitUntilDone:YES];
 			[self performSelectorOnMainThread:@selector(downloadednotificationsData) withObject:nil waitUntilDone:YES];
@@ -208,7 +276,13 @@ static iNotify *sharedInstance = nil;
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[notificationsData release];
+	[notificationsPlistURL release];
+	[okButtonLabel release];
+	[ignoreButtonLabel release];
+	[remindButtonLabel release];
+	[defaultActionButtonLabel release];
 	[super dealloc];
 }
 
@@ -287,22 +361,19 @@ static iNotify *sharedInstance = nil;
 
 #endif
 
-#pragma mark -
-#pragma mark Public methods
-
-+ (void)appLaunched
+- (void)applicationLaunched:(NSNotification *)notification
 {
-	if ([[self sharedInstance] shouldCheckForNotifications])
+	if ([self shouldCheckForNotifications])
 	{
-		[[self sharedInstance] performSelectorInBackground:@selector(checkForNotifications) withObject:nil];
+		[self performSelectorInBackground:@selector(checkForNotifications) withObject:nil];
 	}
 }
 
-+ (void)appEnteredForeground
+- (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-	if ([[self sharedInstance] shouldCheckForNotifications])
+	if ([self shouldCheckForNotifications])
 	{
-		[[self sharedInstance] performSelectorInBackground:@selector(checkForNotifications) withObject:nil];
+		[self performSelectorInBackground:@selector(checkForNotifications) withObject:nil];
 	}
 }
 

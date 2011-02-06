@@ -1,3 +1,11 @@
+Version 1.1
+
+- Configuration no longer involves modifying iNotify.h file
+- Now detects application launch and app switching events automatically
+- FIxed bug in Mac code path
+- Mac and iPhone demos now included
+- Simpler to localise
+
 Version 1.0
 
 - Initial release.

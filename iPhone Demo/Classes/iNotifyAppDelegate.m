@@ -20,6 +20,13 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
++ (void)initialize
+{
+	//configure iNotify
+	[iNotify sharedInstance].notificationsPlistURL = @"http://charcoaldesign.co.uk/iNotify/notifications.plist";
+	[iNotify sharedInstance].debug = YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     // Override point for customization after application launch.
@@ -27,19 +34,9 @@
     // Add the view controller's view to the window and display.
     [self.window addSubview:viewController.view];
     [self.window makeKeyAndVisible];
-	
-	//iNotify init
-	[iNotify appLaunched];
 
     return YES;
 }
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-	//iNotify init
-	[iNotify appEnteredForeground];
-}
-
 
 #pragma mark -
 #pragma mark Memory management

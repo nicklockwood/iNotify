@@ -101,7 +101,7 @@ defaultActionButtonLabel - The default text to use for the action button label i
 
 disabled - Set this to YES to disable checking for notifications. This is equivalent to setting the notificationsPlistURL to nil, but may be more convenient.
 
-debug - If set to YES, iNotify will always download and display the next unread message in the notifications plist when the app launches, irrespective of the checkPeriod and remindPeriod settings. WIth debug enabled, the ignore list will also be cleared out after all message have been read, so that they will continue to display from the beginning on subsequent launches.
+debug - If set to YES, iNotify will always download and display the next unread message in the notifications plist when the app launches, irrespective of the checkPeriod and remindPeriod settings. With debug enabled, the ignore list will also be cleared out after all message have been read, so that they will continue to display from the beginning on subsequent launches.
 
 
 Example Project
@@ -109,6 +109,6 @@ Example Project
 
 When you build and run the example project for the first time, it will show an alert with a promotional message about iNotify. This is because it has downloaded the remote notifications.plist file and this was the newest message it found.
 
-Close the message and quit the app. If you relaunch, you will see nothing unless you set the debug option to true, or set the checkPeriod to 0. If you do this, you will see a new message each time the app launches until all messages in the plist have been viewed.
+Close the message and quit the app. If you relaunch, you will see nothing unless you set the debug option to YES, or set the checkPeriod to 0. If you do this, you will see a new message each time the app launches until all messages in the plist have been viewed.
 
-Once the messages have been exhausted, to show the alerts again, delete the app from the simulator or set debug to true.
+Once the messages have been exhausted, to show the alerts again, delete the app from the simulator or set debug to YES.

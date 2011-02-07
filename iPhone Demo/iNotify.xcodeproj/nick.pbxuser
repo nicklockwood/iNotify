@@ -1,5 +1,16 @@
 // !$*UTF8*$!
 {
+	01A1058F1300979700582232 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* iNotify-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify-Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
 	01D0C6FB12F8D63300F15064 /* iNotify */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -42,53 +53,6 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	01D0C71412F8D6A000F15064 /* iNotify.h */ = {
-		isa = PBXFileReference;
-		fileEncoding = 4;
-		lastKnownFileType = sourcecode.c.h;
-		name = iNotify.h;
-		path = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify/iNotify.h";
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {919, 655}}";
-			sepNavSelRange = "{303, 0}";
-			sepNavVisRange = "{0, 795}";
-		};
-	};
-	01D0C71512F8D6A000F15064 /* iNotify.m */ = {
-		isa = PBXFileReference;
-		fileEncoding = 4;
-		lastKnownFileType = sourcecode.c.objc;
-		name = iNotify.m;
-		path = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify/iNotify.m";
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {919, 4199}}";
-			sepNavSelRange = "{444, 0}";
-			sepNavVisRange = "{0, 1143}";
-			sepNavWindowFrame = "{{38, 39}, {1301, 1113}}";
-		};
-	};
-	01D0C73612F8DCD400F15064 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 1D3623240D0F684500981E51 /* iNotifyAppDelegate.h */;
-		name = "iNotifyAppDelegate.h: 13";
-		rLen = 18;
-		rLoc = 215;
-		rType = 0;
-		vrLen = 481;
-		vrLoc = 0;
-	};
-	01D0C73712F8DCD400F15064 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 1D3623250D0F684500981E51 /* iNotifyAppDelegate.m */;
-		name = "iNotifyAppDelegate.m: 9";
-		rLen = 0;
-		rLoc = 148;
-		rType = 0;
-		vrLen = 887;
-		vrLoc = 0;
-	};
 	01D0C73812F8DCD400F15064 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 28D7ACF70DDB3853001CB0EB /* iNotifyViewController.m */;
@@ -129,69 +93,75 @@
 		vrLen = 183;
 		vrLoc = 0;
 	};
-	01D0C73C12F8DCD400F15064 /* PlistBookmark */ = {
+	01D0CC8512FCD9CD00F15064 /* iNotify.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {919, 678}}";
+			sepNavSelRange = "{578, 17}";
+			sepNavVisRange = "{0, 1127}";
+			sepNavWindowFrame = "{{15, 60}, {1301, 1113}}";
+		};
+	};
+	01D0CC8612FCD9CD00F15064 /* iNotify.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {919, 5031}}";
+			sepNavSelRange = "{2479, 0}";
+			sepNavVisRange = "{5660, 1640}";
+		};
+	};
+	01D0D2101300905B00F15064 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* iNotifyAppDelegate.h */;
+		name = "iNotifyAppDelegate.h: 23";
+		rLen = 0;
+		rLoc = 481;
+		rType = 0;
+		vrLen = 481;
+		vrLoc = 0;
+	};
+	01D0D2111300905B00F15064 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* iNotifyAppDelegate.m */;
+		name = "iNotifyAppDelegate.m: 23";
+		rLen = 192;
+		rLoc = 372;
+		rType = 0;
+		vrLen = 1067;
+		vrLoc = 0;
+	};
+	01D0D2121300905B00F15064 /* PlistBookmark */ = {
 		isa = PlistBookmark;
 		fRef = 8D1107310486CEB800E47090 /* iNotify-Info.plist */;
 		fallbackIsa = PBXBookmark;
 		isK = 0;
 		kPath = (
 		);
-		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iNotify-Info.plist";
+		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify-Info.plist";
 		rLen = 0;
 		rLoc = 9223372036854775808;
 	};
-	01D0C97212FA2B7100F15064 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 01D0C71412F8D6A000F15064 /* iNotify.h */;
-		name = "iNotify.h: 14";
+	01D0D2131300905B00F15064 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* iNotify-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify-Info.plist";
 		rLen = 0;
-		rLoc = 303;
-		rType = 0;
-		vrLen = 795;
-		vrLoc = 0;
-	};
-	01D0C97312FA2B7100F15064 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 01D0C71512F8D6A000F15064 /* iNotify.m */;
-		name = "iNotify.m: 69";
-		rLen = 0;
-		rLoc = 1784;
-		rType = 0;
-		vrLen = 1691;
-		vrLoc = 1115;
-	};
-	01D0CBAD12FCA59F00F15064 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 01D0C71512F8D6A000F15064 /* iNotify.m */;
-		name = "iNotify.m: 16";
-		rLen = 0;
-		rLoc = 444;
-		rType = 0;
-		vrLen = 1072;
-		vrLoc = 0;
-	};
-	01D0CC7812FCD94200F15064 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 01D0C71512F8D6A000F15064 /* iNotify.m */;
-		name = "iNotify.m: 16";
-		rLen = 0;
-		rLoc = 444;
-		rType = 0;
-		vrLen = 1143;
-		vrLoc = 0;
+		rLoc = 9223372036854775808;
 	};
 	1D3623240D0F684500981E51 /* iNotifyAppDelegate.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {857, 512}}";
-			sepNavSelRange = "{215, 18}";
+			sepNavIntBoundsRect = "{{0, 0}, {919, 678}}";
+			sepNavSelRange = "{481, 0}";
 			sepNavVisRange = "{0, 481}";
 		};
 	};
 	1D3623250D0F684500981E51 /* iNotifyAppDelegate.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {857, 650}}";
-			sepNavSelRange = "{148, 0}";
-			sepNavVisRange = "{0, 887}";
+			sepNavIntBoundsRect = "{{0, 0}, {919, 689}}";
+			sepNavSelRange = "{372, 192}";
+			sepNavVisRange = "{0, 1067}";
 		};
 	};
 	1D6058900D05DD3D006BFB54 /* iNotify */ = {
@@ -217,6 +187,7 @@
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = Debug;
 		activeExecutable = 01D0C6FB12F8D63300F15064 /* iNotify */;
+		activeSDKPreference = iphoneos4.2;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* iNotify */;
 		addToTargets = (
 			1D6058900D05DD3D006BFB54 /* iNotify */,
@@ -248,21 +219,19 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 318560699;
-			PBXWorkspaceStateSaveDate = 318560699;
+			PBXPerProjectTemplateStateSaveDate = 318805880;
+			PBXWorkspaceStateSaveDate = 318805880;
 		};
 		perUserProjectItems = {
-			01D0C73612F8DCD400F15064 = 01D0C73612F8DCD400F15064 /* PBXTextBookmark */;
-			01D0C73712F8DCD400F15064 = 01D0C73712F8DCD400F15064 /* PBXTextBookmark */;
+			01A1058F1300979700582232 /* PlistBookmark */ = 01A1058F1300979700582232 /* PlistBookmark */;
 			01D0C73812F8DCD400F15064 = 01D0C73812F8DCD400F15064 /* PBXTextBookmark */;
 			01D0C73912F8DCD400F15064 = 01D0C73912F8DCD400F15064 /* PBXTextBookmark */;
 			01D0C73A12F8DCD400F15064 = 01D0C73A12F8DCD400F15064 /* PBXTextBookmark */;
 			01D0C73B12F8DCD400F15064 = 01D0C73B12F8DCD400F15064 /* PBXTextBookmark */;
-			01D0C73C12F8DCD400F15064 = 01D0C73C12F8DCD400F15064 /* PlistBookmark */;
-			01D0C97212FA2B7100F15064 = 01D0C97212FA2B7100F15064 /* PBXTextBookmark */;
-			01D0C97312FA2B7100F15064 = 01D0C97312FA2B7100F15064 /* PBXTextBookmark */;
-			01D0CBAD12FCA59F00F15064 = 01D0CBAD12FCA59F00F15064 /* PBXTextBookmark */;
-			01D0CC7812FCD94200F15064 = 01D0CC7812FCD94200F15064 /* PBXTextBookmark */;
+			01D0D2101300905B00F15064 = 01D0D2101300905B00F15064 /* PBXTextBookmark */;
+			01D0D2111300905B00F15064 = 01D0D2111300905B00F15064 /* PBXTextBookmark */;
+			01D0D2121300905B00F15064 = 01D0D2121300905B00F15064 /* PlistBookmark */;
+			01D0D2131300905B00F15064 = 01D0D2131300905B00F15064 /* PlistBookmark */;
 		};
 		sourceControlManager = 01D0C70812F8D64500F15064 /* Source Control */;
 		userBuildSettings = {

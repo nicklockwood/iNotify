@@ -68,10 +68,14 @@ static iNotify *sharedInstance = nil;
 												 selector:@selector(applicationLaunched:)
 													 name:UIApplicationDidFinishLaunchingNotification
 												   object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(applicationWillEnterForeground:)
-													 name:UIApplicationWillEnterForegroundNotification
-												   object:nil];
+		
+		if (&UIApplicationWillEnterForegroundNotification)
+		{
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(applicationWillEnterForeground:)
+														 name:UIApplicationWillEnterForegroundNotification
+													   object:nil];
+		}
 #else
 		//register for mac application events
 		[[NSNotificationCenter defaultCenter] addObserver:self

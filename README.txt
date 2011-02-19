@@ -117,7 +117,7 @@ lastChecked - The last date on which iNotify checked for notifications. You can 
 
 lastReminded - The last date on which the user was reminded of a notification. You can use this in combination with the remindPeriod to determine if the app should check again. Set this to nil to clear the reminder delay.
 
-delegate - An object you have supplied that implements the iVersionDelegate protocol, documented below. Use this to detect and/or override iVersion's default behaviour. 
+delegate - An object you have supplied that implements the iNotifyDelegate protocol, documented below. Use this to detect and/or override iNotify's default behaviour. 
 
 
 Advanced methods

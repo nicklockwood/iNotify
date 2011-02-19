@@ -9,9 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface iNotifyMacAppDelegate : NSObject <NSApplicationDelegate> {
-    NSWindow *window;
-}
+@interface iNotifyMacAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 

@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -276,11 +278,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>3</integer>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {274, 1016}}</string>
+							<string>{{0, 0}, {274, 632}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -290,14 +294,14 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {291, 1034}}</string>
+						<string>{{0, 0}, {291, 650}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
 							<real>274</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>260 103 1276 1075 0 0 1920 1178 </string>
+						<string>712 487 1276 691 0 0 1920 1178 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -313,7 +317,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>01D0C70212F8D64500F15064</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>iNotify-Info.plist</string>
+								<string>iNotify.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +325,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>01D0C70312F8D64500F15064</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>iNotify-Info.plist</string>
+										<string>iNotify.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>01A1058F1300979700582232</string>
+										<string>01A107F91303572300582232</string>
 										<key>history</key>
 										<array>
 											<string>01D0C73812F8DCD400F15064</string>
@@ -334,7 +338,9 @@
 											<string>01D0C73B12F8DCD400F15064</string>
 											<string>01D0D2101300905B00F15064</string>
 											<string>01D0D2111300905B00F15064</string>
-											<string>01D0D2131300905B00F15064</string>
+											<string>01A107F61303572300582232</string>
+											<string>01A107F71303572300582232</string>
+											<string>01A107F81303572300582232</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -348,14 +354,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {980, 714}}</string>
+								<string>{{0, 0}, {980, 330}}</string>
 								<key>RubberWindowFrame</key>
-								<string>260 103 1276 1075 0 0 1920 1178 </string>
+								<string>712 487 1276 691 0 0 1920 1178 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>714pt</string>
+							<string>330pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
@@ -429,7 +435,7 @@
 										<key>Frame</key>
 										<string>{{10, 27}, {980, 288}}</string>
 										<key>RubberWindowFrame</key>
-										<string>260 103 1276 1075 0 0 1920 1178 </string>
+										<string>712 487 1276 691 0 0 1920 1178 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -610,14 +616,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>01D0D2171300905B00F15064</string>
+				<string>01A107FA1303572300582232</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>01D0D2181300905B00F15064</string>
-				<string>01D0D2191300905B00F15064</string>
-				<string>01D0D21A1300905B00F15064</string>
-				<string>01D0D21B1300905B00F15064</string>
-				<string>01D0D21C1300905B00F15064</string>
+				<string>01A107FB1303572300582232</string>
+				<string>01A107FC1303572300582232</string>
+				<string>01A107FD1303572300582232</string>
+				<string>01A107FE1303572300582232</string>
+				<string>01A107FF1303572300582232</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -651,10 +657,12 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>01A108001303572300582232</string>
+		<string>01A108011303572300582232</string>
 		<string>/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>260 103 1276 1075 0 0 1920 1178 </string>
+	<string>712 487 1276 691 0 0 1920 1178 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

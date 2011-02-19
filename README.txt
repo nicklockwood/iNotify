@@ -104,6 +104,74 @@ disabled - Set this to YES to disable checking for notifications. This is equiva
 debug - If set to YES, iNotify will always download and display the next unread message in the notifications plist when the app launches, irrespective of the checkPeriod and remindPeriod settings. With debug enabled, the ignore list will also be cleared out after all message have been read, so that they will continue to display from the beginning on subsequent launches.
 
 
+Advanced properties
+---------------
+
+If the default iNotify behaviour doesn't meet your requirements, you can implement your own by using the advanced properties, methods and delegate. The properties below let you access internal state and override it:
+
+ignoredNotifications - An array of keys for notifications that the user has already seen and chosen to ignore.
+
+viewedNotifications - An array of keys for notifications that the user has already viewed.
+
+lastChecked - The last date on which iNotify checked for notifications. You can use this in combination with the checkPeriod to determine if the app should check again.
+
+lastReminded - The last date on which the user was reminded of a notification. You can use this in combination with the remindPeriod to determine if the app should check again. Set this to nil to clear the reminder delay.
+
+delegate - An object you have supplied that implements the iVersionDelegate protocol, documented below. Use this to detect and/or override iVersion's default behaviour. 
+
+
+Advanced methods
+---------------
+
+These can be used in combination with the advanced properties and delegate to precisely control iNotify's behaviour.
+
+- (NSString *)nextNotificationInDict:(NSDictionary *)dict;
+
+This returns the key for the most recent (or oldest, depending on the showOldestFirst setting) notification in the passed dictionary. You can use this with the notifications parameter of the iNotifyDetectedNotifications delegate method to extract a single notification for display.
+
+- (void)setNotificationIgnored:(NSString *)key;
+
+This is a convenience method for marking a notification as ignored, so that it won't appear in future checks for notifications.
+
+- (void)setNotificationViewed:(NSString *)key;
+
+This is a convenience method for marking a notification as viewed, so that it won't appear in future checks for notifications.
+
+- (void)checkForNotifications;
+
+This method will trigger a new check for new notifications, ignoring the checkPeriod and remindPeriod properties.
+
+
+Delegate methods
+---------------
+
+The iNotifyDelegate protocol provides the following methods that can be used intercept iNotify events and override the default behaviour. All methods are optional.
+
+- (BOOL)iNotifyShouldCheckForNotifications;
+
+This is called if the checking criteria have all been met and iNotify is about to check for notifications. If you return NO, the check will not be performed. This method is not called if you trigger the check manually with the checkForNotifications method.
+
+- (void)iNotifyDidNotDetectNotifications;
+
+This is called if the notifications check did not detect any new notifications (that is, notifications that have not already been viewed or ignored).
+
+- (void)iNotifyNotificationsCheckFailed:(NSError *)error;
+
+This is called if the notifications check failed due to network issues or because the notifications plist file was missing or corrupt.
+
+- (void)iNotifyDetectedNotifications:(NSDictionary *)notifications;
+
+This is called if new notifications are detected that have not already been viewed or ignored. The notifications parameter is a dictionary of dictionaries, with each entry representing a single notification (structurally this is the same as the content in the notifications plist).
+
+If you only wish to display a single notification, use the nextNotificationInDict method to filter out the most recent (or oldest, depending on the showOldestFirst setting) notification in dictionary.
+
+To get extract the individual fields for a notification, use the key constants defined at the top of the iNotify.h file.
+
+- (BOOL)iNotifyShouldDisplayNotificationWithKey:(NSString *)key details:(NSDictionary *)details;
+
+This is called immediately before the notification alert is displayed. Return NO to prevent the alert from being displayed. Note that if you do return NO, and intend to implement the alert yourself, you will need to update the lastChecked, lastReminded, ignoredNotifications and viewedNotifications properties manually, depending on the user response.
+
+
 Example Project
 ---------------
 

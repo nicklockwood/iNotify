@@ -1,6 +1,6 @@
 // !$*UTF8*$!
 {
-	01A1058F1300979700582232 /* PlistBookmark */ = {
+	01A107F61303572300582232 /* PlistBookmark */ = {
 		isa = PlistBookmark;
 		fRef = 8D1107310486CEB800E47090 /* iNotify-Info.plist */;
 		fallbackIsa = PBXBookmark;
@@ -10,6 +10,36 @@
 		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify-Info.plist";
 		rLen = 0;
 		rLoc = 9223372036854775807;
+	};
+	01A107F71303572300582232 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 01D0CC8512FCD9CD00F15064 /* iNotify.h */;
+		name = "iNotify.h: 32";
+		rLen = 0;
+		rLoc = 897;
+		rType = 0;
+		vrLen = 1127;
+		vrLoc = 0;
+	};
+	01A107F81303572300582232 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 01D0CC8612FCD9CD00F15064 /* iNotify.m */;
+		name = "iNotify.m: 72";
+		rLen = 56;
+		rLoc = 1625;
+		rType = 0;
+		vrLen = 1518;
+		vrLoc = 832;
+	};
+	01A107F91303572300582232 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 01D0CC8612FCD9CD00F15064 /* iNotify.m */;
+		name = "iNotify.m: 72";
+		rLen = 56;
+		rLoc = 1625;
+		rType = 0;
+		vrLen = 500;
+		vrLoc = 832;
 	};
 	01D0C6FB12F8D63300F15064 /* iNotify */ = {
 		isa = PBXExecutable;
@@ -35,9 +65,13 @@
 		executableUserSymbolLevel = 0;
 		libgmallocEnabled = 0;
 		name = iNotify;
+		savedGlobals = {
+		};
 		showTypeColumn = 0;
 		sourceDirectories = (
 		);
+		variableFormatDictionary = {
+		};
 	};
 	01D0C70812F8D64500F15064 /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -95,17 +129,17 @@
 	};
 	01D0CC8512FCD9CD00F15064 /* iNotify.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {919, 678}}";
-			sepNavSelRange = "{578, 17}";
+			sepNavIntBoundsRect = "{{0, 0}, {919, 697}}";
+			sepNavSelRange = "{897, 0}";
 			sepNavVisRange = "{0, 1127}";
 			sepNavWindowFrame = "{{15, 60}, {1301, 1113}}";
 		};
 	};
 	01D0CC8612FCD9CD00F15064 /* iNotify.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {919, 5031}}";
-			sepNavSelRange = "{2479, 0}";
-			sepNavVisRange = "{5660, 1640}";
+			sepNavIntBoundsRect = "{{0, 0}, {919, 5200}}";
+			sepNavSelRange = "{1625, 56}";
+			sepNavVisRange = "{832, 500}";
 		};
 	};
 	01D0D2101300905B00F15064 /* PBXTextBookmark */ = {
@@ -127,28 +161,6 @@
 		rType = 0;
 		vrLen = 1067;
 		vrLoc = 0;
-	};
-	01D0D2121300905B00F15064 /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = 8D1107310486CEB800E47090 /* iNotify-Info.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-		);
-		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify-Info.plist";
-		rLen = 0;
-		rLoc = 9223372036854775808;
-	};
-	01D0D2131300905B00F15064 /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = 8D1107310486CEB800E47090 /* iNotify-Info.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-		);
-		name = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iNotify/trunk/iPhone Demo/iNotify-Info.plist";
-		rLen = 0;
-		rLoc = 9223372036854775808;
 	};
 	1D3623240D0F684500981E51 /* iNotifyAppDelegate.h */ = {
 		uiCtxt = {
@@ -223,15 +235,16 @@
 			PBXWorkspaceStateSaveDate = 318805880;
 		};
 		perUserProjectItems = {
-			01A1058F1300979700582232 /* PlistBookmark */ = 01A1058F1300979700582232 /* PlistBookmark */;
-			01D0C73812F8DCD400F15064 = 01D0C73812F8DCD400F15064 /* PBXTextBookmark */;
-			01D0C73912F8DCD400F15064 = 01D0C73912F8DCD400F15064 /* PBXTextBookmark */;
-			01D0C73A12F8DCD400F15064 = 01D0C73A12F8DCD400F15064 /* PBXTextBookmark */;
-			01D0C73B12F8DCD400F15064 = 01D0C73B12F8DCD400F15064 /* PBXTextBookmark */;
-			01D0D2101300905B00F15064 = 01D0D2101300905B00F15064 /* PBXTextBookmark */;
-			01D0D2111300905B00F15064 = 01D0D2111300905B00F15064 /* PBXTextBookmark */;
-			01D0D2121300905B00F15064 = 01D0D2121300905B00F15064 /* PlistBookmark */;
-			01D0D2131300905B00F15064 = 01D0D2131300905B00F15064 /* PlistBookmark */;
+			01A107F61303572300582232 /* PlistBookmark */ = 01A107F61303572300582232 /* PlistBookmark */;
+			01A107F71303572300582232 /* PBXTextBookmark */ = 01A107F71303572300582232 /* PBXTextBookmark */;
+			01A107F81303572300582232 /* PBXTextBookmark */ = 01A107F81303572300582232 /* PBXTextBookmark */;
+			01A107F91303572300582232 /* PBXTextBookmark */ = 01A107F91303572300582232 /* PBXTextBookmark */;
+			01D0C73812F8DCD400F15064 /* PBXTextBookmark */ = 01D0C73812F8DCD400F15064 /* PBXTextBookmark */;
+			01D0C73912F8DCD400F15064 /* PBXTextBookmark */ = 01D0C73912F8DCD400F15064 /* PBXTextBookmark */;
+			01D0C73A12F8DCD400F15064 /* PBXTextBookmark */ = 01D0C73A12F8DCD400F15064 /* PBXTextBookmark */;
+			01D0C73B12F8DCD400F15064 /* PBXTextBookmark */ = 01D0C73B12F8DCD400F15064 /* PBXTextBookmark */;
+			01D0D2101300905B00F15064 /* PBXTextBookmark */ = 01D0D2101300905B00F15064 /* PBXTextBookmark */;
+			01D0D2111300905B00F15064 /* PBXTextBookmark */ = 01D0D2111300905B00F15064 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 01D0C70812F8D64500F15064 /* Source Control */;
 		userBuildSettings = {

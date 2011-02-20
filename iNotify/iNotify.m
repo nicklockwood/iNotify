@@ -193,7 +193,7 @@ static iNotify *sharedInstance = nil;
 }
 
 #pragma mark -
-#pragma mark Private methods
+#pragma mark Methods
 
 - (void)setnotificationsDict:(NSDictionary *)notifications
 {
@@ -326,19 +326,26 @@ static iNotify *sharedInstance = nil;
 
 - (BOOL)shouldCheckForNotifications
 {
+	//check if disabled
 	if (disabled)
 	{
 		return NO;
 	}
+	
+	//debug mode?
 	else if (debug)
 	{
 		//continue
 	}
+	
+	//check if first launch
 	else if (!showOnFirstLaunch && [[NSUserDefaults standardUserDefaults] objectForKey:iNotifyIgnoredNotificationsKey] == nil)
 	{
 		self.ignoredNotifications = [NSArray array];
 		return NO;
 	}
+	
+	//check if within the reminder period
 	else if (self.lastReminded != nil)
 	{
 		//reminder takes priority over check period
@@ -347,14 +354,20 @@ static iNotify *sharedInstance = nil;
 			return NO;
 		}
 	}
+	
+	//check if within the check period
 	else if (self.lastChecked != nil && [[NSDate date] timeIntervalSinceDate:self.lastChecked] < checkPeriod * SECONDS_IN_A_DAY)
 	{
 		return NO;
 	}
+	
+	//confirm with delegate
 	if ([(NSObject *)delegate respondsToSelector:@selector(iNotifyShouldCheckForNotifications)])
 	{
 		return [delegate iNotifyShouldCheckForNotifications];
 	}
+	
+	//perform the check
 	return YES;
 }
 

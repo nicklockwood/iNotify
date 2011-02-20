@@ -17,11 +17,6 @@
 		name = iVersion.m;
 		path = "/Users/nick/Documents/Programming Projects/Open Source/cocoa/iVersion/tags/iVersion 1.5/iVersion/iVersion.m";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1582, 8580}}";
-			sepNavSelRange = "{12094, 0}";
-			sepNavVisRange = "{11493, 968}";
-		};
 	};
 	0177C9E4130FE91D006CB927 /* iNotify.h */ = {
 		uiCtxt = {
@@ -212,18 +207,18 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 319809800;
-			PBXWorkspaceStateSaveDate = 319809800;
+			PBXPerProjectTemplateStateSaveDate = 319915098;
+			PBXWorkspaceStateSaveDate = 319915098;
 		};
 		perUserProjectItems = {
-			01387ABC130DD39A002CEC5B /* PlistBookmark */ = 01387ABC130DD39A002CEC5B /* PlistBookmark */;
-			0177CA35130FFAAC006CB927 /* PBXTextBookmark */ = 0177CA35130FFAAC006CB927 /* PBXTextBookmark */;
-			0177CA5013100F1D006CB927 /* PBXTextBookmark */ = 0177CA5013100F1D006CB927 /* PBXTextBookmark */;
-			0177CAAC1310139C006CB927 /* PBXTextBookmark */ = 0177CAAC1310139C006CB927 /* PBXTextBookmark */;
-			0177CB0513103007006CB927 /* PBXTextBookmark */ = 0177CB0513103007006CB927 /* PBXTextBookmark */;
-			0177CB0613103007006CB927 /* PBXTextBookmark */ = 0177CB0613103007006CB927 /* PBXTextBookmark */;
-			0177CB0713103007006CB927 /* PBXTextBookmark */ = 0177CB0713103007006CB927 /* PBXTextBookmark */;
-			01D0D18612FF486700F15064 /* PBXTextBookmark */ = 01D0D18612FF486700F15064 /* PBXTextBookmark */;
+			01387ABC130DD39A002CEC5B = 01387ABC130DD39A002CEC5B /* PlistBookmark */;
+			0177CA35130FFAAC006CB927 = 0177CA35130FFAAC006CB927 /* PBXTextBookmark */;
+			0177CA5013100F1D006CB927 = 0177CA5013100F1D006CB927 /* PBXTextBookmark */;
+			0177CAAC1310139C006CB927 = 0177CAAC1310139C006CB927 /* PBXTextBookmark */;
+			0177CB0513103007006CB927 = 0177CB0513103007006CB927 /* PBXTextBookmark */;
+			0177CB0613103007006CB927 = 0177CB0613103007006CB927 /* PBXTextBookmark */;
+			0177CB0713103007006CB927 = 0177CB0713103007006CB927 /* PBXTextBookmark */;
+			01D0D18612FF486700F15064 = 01D0D18612FF486700F15064 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 01D0D12712FF412900F15064 /* Source Control */;
 		userBuildSettings = {

@@ -31,6 +31,24 @@ extern NSString * const iNotifyActionButtonKey;
 @interface iNotify : NSObject<UIAlertViewDelegate>
 #else
 @interface iNotify : NSObject
+#ifdef __i386__
+{
+	NSDictionary *notificationsDict;
+	NSError *downloadError;
+	NSString *notificationsPlistURL;
+	BOOL showOldestFirst;
+	BOOL showOnFirstLaunch;
+	float checkPeriod;
+	float remindPeriod;
+	NSString *okButtonLabel;
+	NSString *ignoreButtonLabel;
+	NSString *remindButtonLabel;
+	NSString *defaultActionButtonLabel;
+	BOOL disabled;
+	BOOL debug;
+	id<iNotifyDelegate> delegate;
+}
+#endif
 #endif
 
 + (iNotify *)sharedInstance;

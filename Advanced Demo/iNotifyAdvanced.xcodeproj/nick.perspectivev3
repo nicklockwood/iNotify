@@ -274,7 +274,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
+									<integer>3</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -315,7 +315,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>01D0D12112FF412900F15064</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>iNotify.h</string>
+								<string>iNotify.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -323,11 +323,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>01D0D12212FF412900F15064</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>iNotify.h</string>
+										<string>iNotify.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>0177CAC413101FA5006CB927</string>
+										<string>0177CB0713103007006CB927</string>
 										<key>history</key>
 										<array>
 											<string>01D0D18612FF486700F15064</string>
@@ -335,8 +335,8 @@
 											<string>0177CA35130FFAAC006CB927</string>
 											<string>0177CA5013100F1D006CB927</string>
 											<string>0177CAAC1310139C006CB927</string>
-											<string>0177CAC213101FA5006CB927</string>
-											<string>0177CAC313101FA5006CB927</string>
+											<string>0177CB0513103007006CB927</string>
+											<string>0177CB0613103007006CB927</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>

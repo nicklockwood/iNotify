@@ -8,9 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface iNotifyViewController : UIViewController {
-
-}
+@interface iNotifyViewController : UIViewController
 
 @end
 

@@ -1,35 +1,59 @@
 //
 //  iNotify.h
-//  iNotify
+//
+//  Version 1.4
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design. All rights reserved.
+//
+//  http://charcoaldesign.co.uk/source/cocoa#inotify
+//  https://github.com/nicklockwood/iNotify
+//
+//  This software is provided 'as-is', without any express or implied
+//  warranty.  In no event will the authors be held liable for any damages
+//  arising from the use of this software.
+//
+//  Permission is granted to anyone to use this software for any purpose,
+//  including commercial applications, and to alter it and redistribute it
+//  freely, subject to the following restrictions:
+//
+//  1. The origin of this software must not be misrepresented; you must not
+//  claim that you wrote the original software. If you use this software
+//  in a product, an acknowledgment in the product documentation would be
+//  appreciated but is not required.
+//
+//  2. Altered source versions must be plainly marked as such, and must not be
+//  misrepresented as being the original software.
+//
+//  3. This notice may not be removed or altered from any source distribution.
 //
 
 #import <Foundation/Foundation.h>
 
 
-extern NSString * const iNotifyTitleKey;
-extern NSString * const iNotifyMessageKey;
-extern NSString * const iNotifyActionURLKey;
-extern NSString * const iNotifyActionButtonKey;
+static NSString *const iNotifyTitleKey = @"Title";
+static NSString *const iNotifyMessageKey = @"Message";
+static NSString *const iNotifyActionURLKey = @"ActionURL";
+static NSString *const iNotifyActionButtonKey = @"ActionButton";
+static NSString *const iNotifyMessageMinVersionKey = @"MinVersion";
+static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 
 
-@protocol iNotifyDelegate
-
+@protocol iNotifyDelegate <NSObject>
 @optional
+
 - (BOOL)iNotifyShouldCheckForNotifications;
 - (void)iNotifyDidNotDetectNotifications;
-- (void)iNotifyNotificationsCheckFailed:(NSError *)error;
-- (void)iNotifyDetectedNotifications:(NSDictionary *)notifications;
+- (void)iNotifyNotificationsCheckDidFailWithError:(NSError *)error;
+- (void)iNotifyDidDetectNotifications:(NSDictionary *)notifications;
 - (BOOL)iNotifyShouldDisplayNotificationWithKey:(NSString *)key details:(NSDictionary *)details;
+- (void)iNotifyUserDidViewActionURLForNotificationWithKey:(NSString *)key details:(NSDictionary *)details;
+- (void)iNotifyUserDidRequestReminderForNotificationWithKey:(NSString *)key details:(NSDictionary *)details;
+- (void)iNotifyUserDidIgnoreNotificationWithKey:(NSString *)key details:(NSDictionary *)details;
 
 @end
 
 
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-@interface iNotify : NSObject<UIAlertViewDelegate>
-#else
 @interface iNotify : NSObject
 #ifdef __i386__
 {
@@ -44,11 +68,10 @@ extern NSString * const iNotifyActionButtonKey;
 	NSString *ignoreButtonLabel;
 	NSString *remindButtonLabel;
 	NSString *defaultActionButtonLabel;
-	BOOL disabled;
+	BOOL checkAtLaunch;
 	BOOL debug;
 	id<iNotifyDelegate> delegate;
 }
-#endif
 #endif
 
 + (iNotify *)sharedInstance;
@@ -68,8 +91,8 @@ extern NSString * const iNotifyActionButtonKey;
 @property (nonatomic, copy) NSString *remindButtonLabel;
 @property (nonatomic, copy) NSString *defaultActionButtonLabel;
 
-//debugging and disabling
-@property (nonatomic, assign) BOOL disabled;
+//debugging and automatic checks
+@property (nonatomic, assign) BOOL checkAtLaunch;
 @property (nonatomic, assign) BOOL debug;
 
 //advanced properties for implementing custom behaviour
@@ -83,6 +106,7 @@ extern NSString * const iNotifyActionButtonKey;
 - (NSString *)nextNotificationInDict:(NSDictionary *)dict;
 - (void)setNotificationIgnored:(NSString *)key;
 - (void)setNotificationViewed:(NSString *)key;
+- (BOOL)shouldCheckForNotifications;
 - (void)checkForNotifications;
 
 @end

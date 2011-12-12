@@ -19,12 +19,12 @@
 {
 	//configure iNotify
 	[iNotify sharedInstance].notificationsPlistURL = @"http://charcoaldesign.co.uk/iNotify/notifications.plist";
-	[iNotify sharedInstance].disabled = YES;
+	[iNotify sharedInstance].checkOnLaunch = NO;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	//set myself as iVersion delegate
+	//set app delegate as iVersion delegate
 	[iNotify sharedInstance].delegate = self;
 }
 
@@ -38,7 +38,7 @@
 #pragma mark -
 #pragma mark iNotifyDelegate methods
 
-- (void)iNotifyNotificationsCheckFailed:(NSError *)error
+- (void)iNotifyNotificationsCheckDidFailWithError:(NSError *)error
 {
 	[textView setString:[NSString stringWithFormat:@"Error: %@", error]];
 	[progressIndicator stopAnimation:self];
@@ -50,7 +50,7 @@
 	[progressIndicator stopAnimation:self];
 }
 
-- (void)iNotifyDetectedNotifications:(NSDictionary *)notifications;
+- (void)iNotifyDidDetectNotifications:(NSDictionary *)notifications;
 {
 	NSMutableString *details = [NSMutableString string];
 	for (NSString *key in [notifications allKeys])

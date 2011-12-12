@@ -18,7 +18,7 @@
 {
 	//configure iNotify
 	[iNotify sharedInstance].notificationsPlistURL = @"http://charcoaldesign.co.uk/iNotify/notifications.plist";
-	[iNotify sharedInstance].debug = YES;
+	[iNotify sharedInstance].debug = NO;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification

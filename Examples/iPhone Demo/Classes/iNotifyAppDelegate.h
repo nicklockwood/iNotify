@@ -10,10 +10,7 @@
 
 @class iNotifyViewController;
 
-@interface iNotifyAppDelegate : NSObject <UIApplicationDelegate> {
-    UIWindow *window;
-    iNotifyViewController *viewController;
-}
+@interface iNotifyAppDelegate : NSObject <UIApplicationDelegate>
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet iNotifyViewController *viewController;

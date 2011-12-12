@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01D0CCA712FCDA4F00F15064 /* iNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D0CCA612FCDA4F00F15064 /* iNotify.m */; };
+		0176D54014965D7B0087DCB1 /* iNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 0176D53F14965D7B0087DCB1 /* iNotify.m */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* iNotifyMacAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* iNotifyMacAppDelegate.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -16,8 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		01D0CCA512FCDA4F00F15064 /* iNotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iNotify.h; sourceTree = "<group>"; };
-		01D0CCA612FCDA4F00F15064 /* iNotify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iNotify.m; sourceTree = "<group>"; };
+		0176D53E14965D7B0087DCB1 /* iNotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iNotify.h; sourceTree = "<group>"; };
+		0176D53F14965D7B0087DCB1 /* iNotify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iNotify.m; sourceTree = "<group>"; };
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -44,15 +44,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		01D0CCA412FCDA4F00F15064 /* iNotify */ = {
+		0176D53D14965D7B0087DCB1 /* iNotify */ = {
 			isa = PBXGroup;
 			children = (
-				01D0CCA512FCDA4F00F15064 /* iNotify.h */,
-				01D0CCA612FCDA4F00F15064 /* iNotify.m */,
+				0176D53E14965D7B0087DCB1 /* iNotify.h */,
+				0176D53F14965D7B0087DCB1 /* iNotify.m */,
 			);
 			name = iNotify;
-			path = ../iNotify;
-			sourceTree = SOURCE_ROOT;
+			path = ../../iNotify;
+			sourceTree = "<group>";
 		};
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
@@ -92,7 +92,7 @@
 		29B97314FDCFA39411CA2CEA /* iNotifyMac */ = {
 			isa = PBXGroup;
 			children = (
-				01D0CCA412FCDA4F00F15064 /* iNotify */,
+				0176D53D14965D7B0087DCB1 /* iNotify */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -194,7 +194,7 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				256AC3DA0F4B6AC300CF3369 /* iNotifyMacAppDelegate.m in Sources */,
-				01D0CCA712FCDA4F00F15064 /* iNotify.m in Sources */,
+				0176D54014965D7B0087DCB1 /* iNotify.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

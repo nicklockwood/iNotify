@@ -1,3 +1,9 @@
+Version 1.4
+
+- Notification messages can now be restricted to specific application versions
+- Added additional delegate methods
+- Renamed disabled property to checkAtLaunch for clarity
+
 Version 1.3.2
 
 - Fixed bug whereby ignored or viewed notifications would continue to appear.

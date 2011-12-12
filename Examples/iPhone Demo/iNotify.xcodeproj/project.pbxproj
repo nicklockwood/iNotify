@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01D0CC8712FCD9CD00F15064 /* iNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D0CC8612FCD9CD00F15064 /* iNotify.m */; };
+		0176D53314964E8F0087DCB1 /* iNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 0176D53214964E8F0087DCB1 /* iNotify.m */; };
 		1D3623260D0F684500981E51 /* iNotifyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* iNotifyAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -19,8 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		01D0CC8512FCD9CD00F15064 /* iNotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iNotify.h; sourceTree = "<group>"; };
-		01D0CC8612FCD9CD00F15064 /* iNotify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iNotify.m; sourceTree = "<group>"; };
+		0176D53114964E8F0087DCB1 /* iNotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iNotify.h; sourceTree = "<group>"; };
+		0176D53214964E8F0087DCB1 /* iNotify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iNotify.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* iNotifyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iNotifyAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* iNotifyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iNotifyAppDelegate.m; sourceTree = "<group>"; };
@@ -50,15 +50,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		01D0CC8412FCD9CD00F15064 /* iNotify */ = {
+		0176D53014964E8F0087DCB1 /* iNotify */ = {
 			isa = PBXGroup;
 			children = (
-				01D0CC8512FCD9CD00F15064 /* iNotify.h */,
-				01D0CC8612FCD9CD00F15064 /* iNotify.m */,
+				0176D53114964E8F0087DCB1 /* iNotify.h */,
+				0176D53214964E8F0087DCB1 /* iNotify.m */,
 			);
 			name = iNotify;
-			path = ../iNotify;
-			sourceTree = SOURCE_ROOT;
+			path = ../../iNotify;
+			sourceTree = "<group>";
 		};
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
@@ -82,7 +82,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				01D0CC8412FCD9CD00F15064 /* iNotify */,
+				0176D53014964E8F0087DCB1 /* iNotify */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -185,7 +185,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* iNotifyAppDelegate.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* iNotifyViewController.m in Sources */,
-				01D0CC8712FCD9CD00F15064 /* iNotify.m in Sources */,
+				0176D53314964E8F0087DCB1 /* iNotify.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

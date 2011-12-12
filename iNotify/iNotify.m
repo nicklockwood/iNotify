@@ -1,24 +1,40 @@
 //
 //  iNotify.m
-//  iNotify
+//
+//  Version 1.4
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design. All rights reserved.
+//
+//  http://charcoaldesign.co.uk/source/cocoa#inotify
+//  https://github.com/nicklockwood/iNotify
+//
+//  This software is provided 'as-is', without any express or implied
+//  warranty.  In no event will the authors be held liable for any damages
+//  arising from the use of this software.
+//
+//  Permission is granted to anyone to use this software for any purpose,
+//  including commercial applications, and to alter it and redistribute it
+//  freely, subject to the following restrictions:
+//
+//  1. The origin of this software must not be misrepresented; you must not
+//  claim that you wrote the original software. If you use this software
+//  in a product, an acknowledgment in the product documentation would be
+//  appreciated but is not required.
+//
+//  2. Altered source versions must be plainly marked as such, and must not be
+//  misrepresented as being the original software.
+//
+//  3. This notice may not be removed or altered from any source distribution.
 //
 
 #import "iNotify.h"
 
 
-NSString * const iNotifyTitleKey = @"Title";
-NSString * const iNotifyMessageKey = @"Message";
-NSString * const iNotifyActionURLKey = @"ActionURL";
-NSString * const iNotifyActionButtonKey = @"ActionButton";
-
-
-static NSString * const iNotifyIgnoredNotificationsKey = @"iNotifyIgnoredNotifications";
-static NSString * const iNotifyViewedNotificationsKey = @"iNotifyViewedNotifications";
-static NSString * const iNotifyLastCheckedKey = @"iNotifyLastChecked";
-static NSString * const iNotifyLastRemindedKey = @"iNotifyLastReminded";
+static NSString *const iNotifyIgnoredNotificationsKey = @"iNotifyIgnoredNotifications";
+static NSString *const iNotifyViewedNotificationsKey = @"iNotifyViewedNotifications";
+static NSString *const iNotifyLastCheckedKey = @"iNotifyLastChecked";
+static NSString *const iNotifyLastRemindedKey = @"iNotifyLastReminded";
 
 
 static iNotify *sharedInstance = nil;
@@ -27,7 +43,11 @@ static iNotify *sharedInstance = nil;
 #define SECONDS_IN_A_DAY 86400.0
 
 
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+@interface iNotify() <UIAlertViewDelegate>
+#else
 @interface iNotify()
+#endif
 
 @property (nonatomic, copy) NSDictionary *notificationsDict;
 @property (nonatomic, retain) NSError *downloadError;
@@ -48,7 +68,7 @@ static iNotify *sharedInstance = nil;
 @synthesize ignoreButtonLabel;
 @synthesize remindButtonLabel;
 @synthesize defaultActionButtonLabel;
-@synthesize disabled;
+@synthesize checkAtLaunch;
 @synthesize debug;
 @synthesize delegate;
 
@@ -90,6 +110,7 @@ static iNotify *sharedInstance = nil;
 												   object:nil];
 #endif
 		//default settings
+		checkAtLaunch = YES;
 		showOldestFirst = NO;
 		showOnFirstLaunch = NO;
 		checkPeriod = 0.5;
@@ -237,43 +258,69 @@ static iNotify *sharedInstance = nil;
 	//check if data downloaded
 	if (!notificationsDict)
 	{
-		if ([(NSObject *)delegate respondsToSelector:@selector(iNotifyNotificationsCheckFailed:)])
+        if ([delegate respondsToSelector:@selector(iNotifyNotificationsCheckDidFailWithError:)])
 		{
-			[delegate iNotifyNotificationsCheckFailed:downloadError];
+			[delegate iNotifyNotificationsCheckDidFailWithError:downloadError];
 		}
+        
+        //deprecated code path
+		else if ([delegate respondsToSelector:@selector(iNotifyNotificationsCheckFailed:)])
+		{
+            NSLog(@"iNotifyNotificationsCheckFailed: delegate method is deprecated, use iNotifyNotificationsCheckDidFailWithError: instead");
+			[delegate performSelector:@selector(iNotifyNotificationsCheckFailed:) withObject:downloadError];
+		}
+        
 		return;
 	}
 
 	//inform delegate about notifications
-	if ([(NSObject *)delegate respondsToSelector:@selector(iNotifyDetectedNotifications:)])
+	if ([delegate respondsToSelector:@selector(iNotifyDidDetectNotifications:)])
 	{
-		[delegate iNotifyDetectedNotifications:notificationsDict];
-	}		
+		[delegate iNotifyDidDetectNotifications:notificationsDict];
+	}
+    
+    //deprecated code path
+    else if ([delegate respondsToSelector:@selector(iNotifyDetectedNotifications:)])
+	{
+        NSLog(@"iNotifyDetectedNotifications: delegate method is deprecated, use iNotifyDidDetectNotifications: instead");
+        [delegate performSelector:@selector(iNotifyDetectedNotifications:) withObject:notificationsDict];
+	}	
 	
 	//get next notification
 	NSString *notificationKey = [self nextNotificationInDict:notificationsDict];
 	if (notificationKey)
 	{
-		//get notification data
+        //get notification data
 		NSDictionary *notification = [notificationsDict objectForKey:notificationKey];
-		if ([(NSObject *)delegate respondsToSelector:@selector(iNotifyShouldDisplayNotificationWithKey:details:)])
+        
+		//get notification details
+		NSString *title = [notification objectForKey:iNotifyTitleKey];
+		NSString *message = [notification objectForKey:iNotifyMessageKey];
+        NSString *minVersion = [notification objectForKey:iNotifyMessageMinVersionKey] ?: @"0";
+        NSString *maxVersion = [notification objectForKey:iNotifyMessageMaxVersionKey] ?: @"9999999";
+		NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
+		NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey] ?: defaultActionButtonLabel;
+
+        //check version
+        NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+        if ([appVersion compare:minVersion options:NSNumericSearch] == NSOrderedAscending)
+        {
+            return;
+        }
+        else if ([appVersion compare:maxVersion options:NSNumericSearch] == NSOrderedDescending)
+        {
+            return;
+        }
+        
+        //check delegate
+		if ([delegate respondsToSelector:@selector(iNotifyShouldDisplayNotificationWithKey:details:)])
 		{
 			if (![delegate iNotifyShouldDisplayNotificationWithKey:notificationKey details:notification])
 			{
 				return;
 			}
 		}
-		
-		//get notification details
-		NSString *title = [notification objectForKey:iNotifyTitleKey];
-		NSString *message = [notification objectForKey:iNotifyMessageKey];
-		NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
-		NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey];
-		if (!actionButtonLabel)
-		{
-			actionButtonLabel = defaultActionButtonLabel;
-		}
-
+        
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 		
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
@@ -326,32 +373,27 @@ static iNotify *sharedInstance = nil;
 
 - (BOOL)shouldCheckForNotifications
 {
-	if (disabled)
+	if (!debug)
 	{
-		return NO;
-	}
-	else if (debug)
-	{
-		//continue
-	}
-	else if (!showOnFirstLaunch && [[NSUserDefaults standardUserDefaults] objectForKey:iNotifyIgnoredNotificationsKey] == nil)
-	{
-		self.ignoredNotifications = [NSArray array];
-		return NO;
-	}
-	else if (self.lastReminded != nil)
-	{
-		//reminder takes priority over check period
-		if ([[NSDate date] timeIntervalSinceDate:self.lastReminded] < remindPeriod * SECONDS_IN_A_DAY)
-		{
-			return NO;
-		}
-	}
-	else if (self.lastChecked != nil && [[NSDate date] timeIntervalSinceDate:self.lastChecked] < checkPeriod * SECONDS_IN_A_DAY)
-	{
-		return NO;
-	}
-	if ([(NSObject *)delegate respondsToSelector:@selector(iNotifyShouldCheckForNotifications)])
+		if (!showOnFirstLaunch && [[NSUserDefaults standardUserDefaults] objectForKey:iNotifyIgnoredNotificationsKey] == nil)
+        {
+            self.ignoredNotifications = [NSArray array];
+            return NO;
+        }
+        else if (self.lastReminded != nil)
+        {
+            //reminder takes priority over check period
+            if ([[NSDate date] timeIntervalSinceDate:self.lastReminded] < remindPeriod * SECONDS_IN_A_DAY)
+            {
+                return NO;
+            }
+        }
+        else if (self.lastChecked != nil && [[NSDate date] timeIntervalSinceDate:self.lastChecked] < checkPeriod * SECONDS_IN_A_DAY)
+        {
+            return NO;
+        }
+    }
+	if ([delegate respondsToSelector:@selector(iNotifyShouldCheckForNotifications)])
 	{
 		return [delegate iNotifyShouldCheckForNotifications];
 	}
@@ -409,6 +451,12 @@ static iNotify *sharedInstance = nil;
 	{
 		if (actionURL)
 		{
+            //log event
+            if ([delegate respondsToSelector:@selector(iNotifyUserDidIgnoreNotificationWithKey:details:)])
+            {
+                [delegate iNotifyUserDidIgnoreNotificationWithKey:key details:notification];
+            }
+            
 			//set ignored
 			[self setNotificationIgnored:key];
 		}
@@ -423,6 +471,12 @@ static iNotify *sharedInstance = nil;
 	}
 	else if (buttonIndex == 1)
 	{
+        //log event
+        if ([delegate respondsToSelector:@selector(iNotifyUserDidRequestReminderForNotificationWithKey:details:)])
+        {
+            [delegate iNotifyUserDidRequestReminderForNotificationWithKey:key details:notification];
+        }
+        
 		//remind later
 		self.lastReminded = [NSDate date];
 	}
@@ -431,8 +485,14 @@ static iNotify *sharedInstance = nil;
 		//set viewed and clear reminder
 		[self setNotificationViewed:key];
 		self.lastReminded = nil;
+        
+        //log event
+        if ([delegate respondsToSelector:@selector(iNotifyUserDidViewActionURLForNotificationWithKey:details:)])
+        {
+        	[delegate iNotifyUserDidViewActionURLForNotificationWithKey:key details:notification];
+        }
 		
-		//go to download page
+		//open URL
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:actionURL]];
 	}
 }
@@ -449,6 +509,12 @@ static iNotify *sharedInstance = nil;
 	{
 		case NSAlertAlternateReturn:
 		{
+            //log event
+            if ([delegate respondsToSelector:@selector(iNotifyUserDidIgnoreNotificationWithKey:details:)])
+            {
+                [delegate iNotifyUserDidIgnoreNotificationWithKey:key details:notification];
+            }
+            
 			//set ignored and clear reminder
 			[self setNotificationIgnored:key];
 			self.lastReminded = nil;
@@ -459,16 +525,28 @@ static iNotify *sharedInstance = nil;
 			//set viewed and clear reminder
 			[self setNotificationViewed:key];
 			self.lastReminded = nil;
-			
-			//go to download page
+            
 			if (actionURL)
 			{
+                //log event
+                if ([delegate respondsToSelector:@selector(iNotifyUserDidViewActionURLForNotificationWithKey:details:)])
+                {
+                    [delegate iNotifyUserDidViewActionURLForNotificationWithKey:key details:notification];
+                }
+                
+                //open URL
 				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:actionURL]];
 			}
 			break;
 		}
 		default:
 		{
+            //log event
+            if ([delegate respondsToSelector:@selector(iNotifyUserDidRequestReminderForNotificationWithKey:details:)])
+            {
+                [delegate iNotifyUserDidRequestReminderForNotificationWithKey:key details:notification];
+            }
+            
 			//remind later
 			self.lastReminded = [NSDate date];
 		}
@@ -479,7 +557,7 @@ static iNotify *sharedInstance = nil;
 
 - (void)applicationLaunched:(NSNotification *)notification
 {
-	if ([self shouldCheckForNotifications])
+	if (checkAtLaunch && [self shouldCheckForNotifications])
 	{
 		[self checkForNotifications];
 	}
@@ -487,7 +565,7 @@ static iNotify *sharedInstance = nil;
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-	if ([self shouldCheckForNotifications])
+	if (checkAtLaunch && [self shouldCheckForNotifications])
 	{
 		[self checkForNotifications];
 	}

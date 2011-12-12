@@ -19,7 +19,7 @@
 {
 	//configure iNotify
 	[iNotify sharedInstance].notificationsPlistURL = @"http://charcoaldesign.co.uk/iNotify/notifications.plist";
-	[iNotify sharedInstance].checkOnLaunch = NO;
+	[iNotify sharedInstance].checkAtLaunch = NO;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification

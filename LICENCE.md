@@ -1,5 +1,5 @@
 iNotify
-version 1.3.2, June 28th, 2011
+version 1.4, December 12th, 2011
 
 Copyright (C) 2011 Charcoal Design
 

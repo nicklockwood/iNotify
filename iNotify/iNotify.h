@@ -1,10 +1,13 @@
 //
 //  iNotify.h
 //
-//  Version 1.4
+//  Version 1.4.1
 //
 //  Created by Nick Lockwood on 26/01/2011.
-//  Copyright 2011 Charcoal Design. All rights reserved.
+//  Copyright 2011 Charcoal Design
+//
+//  Distributed under the permissive zlib license
+//  Get the latest version from either of these locations:
 //
 //  http://charcoaldesign.co.uk/source/cocoa#inotify
 //  https://github.com/nicklockwood/iNotify
@@ -28,7 +31,67 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
-#import <Foundation/Foundation.h>
+//
+//  ARC Helper
+//
+//  Version 1.2
+//
+//  Created by Nick Lockwood on 05/01/2012.
+//  Copyright 2012 Charcoal Design
+//
+//  Distributed under the permissive zlib license
+//  Get the latest version from here:
+//
+//  https://gist.github.com/1563325
+//
+
+
+#ifndef AH_RETAIN
+#if __has_feature(objc_arc)
+#define AH_RETAIN(x) x
+#define AH_RELEASE(x)
+#define AH_AUTORELEASE(x) x
+#define AH_SUPER_DEALLOC
+#else
+#define __AH_WEAK
+#define AH_WEAK assign
+#define AH_RETAIN(x) [x retain]
+#define AH_RELEASE(x) [x release]
+#define AH_AUTORELEASE(x) [x autorelease]
+#define AH_SUPER_DEALLOC [super dealloc]
+#endif
+#endif
+
+//  Weak reference support
+
+#ifndef AH_WEAK
+#if defined __IPHONE_OS_VERSION_MIN_REQUIRED
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_4_3
+#define __AH_WEAK __weak
+#define AH_WEAK weak
+#else
+#define __AH_WEAK __unsafe_unretained
+#define AH_WEAK unsafe_unretained
+#endif
+#elif defined __MAC_OS_X_VERSION_MIN_REQUIRED
+#if __MAC_OS_X_VERSION_MIN_REQUIRED > __MAC_10_6
+#define __AH_WEAK __weak
+#define AH_WEAK weak
+#else
+#define __AH_WEAK __unsafe_unretained
+#define AH_WEAK unsafe_unretained
+#endif
+#endif
+#endif
+
+//  ARC Helper ends
+
+
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+#import <UIKit/UIKit.h>
+#else
+#import <Cocoa/Cocoa.h>
+#endif
 
 
 static NSString *const iNotifyTitleKey = @"Title";
@@ -55,8 +118,12 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 
 
 @interface iNotify : NSObject
+
+//required for 32-bit Macs
 #ifdef __i386__
 {
+	@private
+	
 	NSDictionary *notificationsDict;
 	NSError *downloadError;
 	NSString *notificationsPlistURL;
@@ -70,7 +137,7 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 	NSString *defaultActionButtonLabel;
 	BOOL checkAtLaunch;
 	BOOL debug;
-	id<iNotifyDelegate> delegate;
+	id<iNotifyDelegate> __AH_WEAK delegate;
 }
 #endif
 
@@ -98,9 +165,9 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 //advanced properties for implementing custom behaviour
 @property (nonatomic, copy) NSArray *ignoredNotifications;
 @property (nonatomic, copy) NSArray *viewedNotifications;
-@property (nonatomic, retain) NSDate *lastChecked;
-@property (nonatomic, retain) NSDate *lastReminded;
-@property (nonatomic, assign) id<iNotifyDelegate> delegate;
+@property (nonatomic, strong) NSDate *lastChecked;
+@property (nonatomic, strong) NSDate *lastReminded;
+@property (nonatomic, AH_WEAK) id<iNotifyDelegate> delegate;
 
 //manually control behaviour
 - (NSString *)nextNotificationInDict:(NSDictionary *)dict;

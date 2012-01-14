@@ -1,10 +1,13 @@
 //
 //  iNotify.m
 //
-//  Version 1.4
+//  Version 1.4.1
 //
 //  Created by Nick Lockwood on 26/01/2011.
-//  Copyright 2011 Charcoal Design. All rights reserved.
+//  Copyright 2011 Charcoal Design
+//
+//  Distributed under the permissive zlib license
+//  Get the latest version from either of these locations:
 //
 //  http://charcoaldesign.co.uk/source/cocoa#inotify
 //  https://github.com/nicklockwood/iNotify
@@ -50,7 +53,7 @@ static iNotify *sharedInstance = nil;
 #endif
 
 @property (nonatomic, copy) NSDictionary *notificationsDict;
-@property (nonatomic, retain) NSError *downloadError;
+@property (nonatomic, strong) NSError *downloadError;
 
 @end
 
@@ -203,14 +206,15 @@ static iNotify *sharedInstance = nil;
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[notificationsDict release];
-	[downloadError release];
-	[notificationsPlistURL release];
-	[okButtonLabel release];
-	[ignoreButtonLabel release];
-	[remindButtonLabel release];
-	[defaultActionButtonLabel release];
-	[super dealloc];
+	
+	AH_RELEASE(notificationsDict);
+	AH_RELEASE(downloadError);
+	AH_RELEASE(notificationsPlistURL);
+	AH_RELEASE(okButtonLabel);
+	AH_RELEASE(ignoreButtonLabel);
+	AH_RELEASE(remindButtonLabel);
+    AH_RELEASE(defaultActionButtonLabel);
+	AH_SUPER_DEALLOC;
 }
 
 #pragma mark -
@@ -220,10 +224,10 @@ static iNotify *sharedInstance = nil;
 {
 	if (notifications != notificationsDict)
 	{
-		[notificationsDict release];
+		AH_RELEASE(notificationsDict);
 		
 		//filter out ignored and viewed notifications
-		NSMutableDictionary *filteredNotifications = [[notifications mutableCopy] autorelease];
+		NSMutableDictionary *filteredNotifications = AH_AUTORELEASE([notifications mutableCopy]);
 		[filteredNotifications removeObjectsForKeys:self.ignoredNotifications];
 		[filteredNotifications removeObjectsForKeys:self.viewedNotifications];
 		
@@ -233,7 +237,7 @@ static iNotify *sharedInstance = nil;
 			//reset ignored and viewed lists
 			self.ignoredNotifications = nil;
 			self.viewedNotifications = nil;
-			filteredNotifications = [[notifications mutableCopy] autorelease];
+			filteredNotifications = AH_AUTORELEASE([notifications mutableCopy]);
 		}
 		
 		//set dict
@@ -272,7 +276,7 @@ static iNotify *sharedInstance = nil;
         
 		return;
 	}
-
+    
 	//inform delegate about notifications
 	if ([delegate respondsToSelector:@selector(iNotifyDidDetectNotifications:)])
 	{
@@ -300,7 +304,7 @@ static iNotify *sharedInstance = nil;
         NSString *maxVersion = [notification objectForKey:iNotifyMessageMaxVersionKey] ?: @"9999999";
 		NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
 		NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey] ?: defaultActionButtonLabel;
-
+        
         //check version
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
         if ([appVersion compare:minVersion options:NSNumericSearch] == NSOrderedAscending)
@@ -342,7 +346,7 @@ static iNotify *sharedInstance = nil;
 		}
 		
 		[alert show];
-		[alert release];
+		AH_RELEASE(alert);
 #else
 		NSAlert *alert = nil;
 		
@@ -406,27 +410,28 @@ static iNotify *sharedInstance = nil;
 	{
 		if (notificationsPlistURL)
 		{
-			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-			NSError *error = nil;
-			NSDictionary *notifications = nil;
-			NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:notificationsPlistURL] options:NSDataReadingUncached error:&error];
-			if (data)
-			{
-				NSPropertyListFormat format;
-				if ([NSPropertyListSerialization respondsToSelector:@selector(propertyListWithData:options:format:error:)])
-				{
-					notifications = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:&format error:&error];
-				}
-				else
-				{
-					notifications = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:0 format:&format errorDescription:NULL];
-				}
-			}
-			[self performSelectorOnMainThread:@selector(setDownloadError:) withObject:error waitUntilDone:YES];
-			[self performSelectorOnMainThread:@selector(setNotificationsDict:) withObject:notifications waitUntilDone:YES];
-			[self performSelectorOnMainThread:@selector(setLastChecked:) withObject:[NSDate date] waitUntilDone:YES];
-			[self performSelectorOnMainThread:@selector(downloadedNotificationsData) withObject:nil waitUntilDone:YES];
-			[pool drain];
+			@autoreleasepool
+            {
+                NSError *error = nil;
+                NSDictionary *notifications = nil;
+                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:notificationsPlistURL] options:NSDataReadingUncached error:&error];
+                if (data)
+                {
+                    NSPropertyListFormat format;
+                    if ([NSPropertyListSerialization respondsToSelector:@selector(propertyListWithData:options:format:error:)])
+                    {
+                        notifications = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:&format error:&error];
+                    }
+                    else
+                    {
+                        notifications = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:0 format:&format errorDescription:NULL];
+                    }
+                }
+                [self performSelectorOnMainThread:@selector(setDownloadError:) withObject:error waitUntilDone:YES];
+                [self performSelectorOnMainThread:@selector(setNotificationsDict:) withObject:notifications waitUntilDone:YES];
+                [self performSelectorOnMainThread:@selector(setLastChecked:) withObject:[NSDate date] waitUntilDone:YES];
+                [self performSelectorOnMainThread:@selector(downloadedNotificationsData) withObject:nil waitUntilDone:YES];
+            }
 		}
 	}
 }

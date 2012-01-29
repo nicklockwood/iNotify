@@ -100,6 +100,8 @@ static NSString *const iNotifyActionURLKey = @"ActionURL";
 static NSString *const iNotifyActionButtonKey = @"ActionButton";
 static NSString *const iNotifyMessageMinVersionKey = @"MinVersion";
 static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
+static NSString *const iNotifyMessageMinVersionStringKey = @"MinVersionString";
+static NSString *const iNotifyMessageMaxVersionStringKey = @"MaxVersionString";
 
 
 @protocol iNotifyDelegate <NSObject>

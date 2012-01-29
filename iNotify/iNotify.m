@@ -302,6 +302,8 @@ static iNotify *sharedInstance = nil;
 		NSString *message = [notification objectForKey:iNotifyMessageKey];
         NSString *minVersion = [notification objectForKey:iNotifyMessageMinVersionKey] ?: @"0";
         NSString *maxVersion = [notification objectForKey:iNotifyMessageMaxVersionKey] ?: @"9999999";
+        NSString *minVersionString = [notification objectForKey:iNotifyMessageMinVersionStringKey] ?: @"0";
+        NSString *maxVersionString = [notification objectForKey:iNotifyMessageMaxVersionStringKey] ?: @"9999999";
 		NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
 		NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey] ?: defaultActionButtonLabel;
         
@@ -315,6 +317,18 @@ static iNotify *sharedInstance = nil;
         {
             return;
         }
+
+        //check version string
+        NSString *appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        if ([appVersionString compare:minVersionString options:NSNumericSearch] == NSOrderedAscending)
+        {
+            return;
+        }
+        else if ([appVersionString compare:maxVersionString options:NSNumericSearch] == NSOrderedDescending)
+        {
+            return;
+        }
+        
         
         //check delegate
 		if ([delegate respondsToSelector:@selector(iNotifyShouldDisplayNotificationWithKey:details:)])

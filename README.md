@@ -109,6 +109,13 @@ The minimum application version that the notification should be displayed on. Th
 
 The maximum application version that the notification should be displayed on. This is useful for notifications that refer to features in specific application versions. For example, you could use this to notify users of older releases of the app that a new version is available (note that if this is the only reason you're using iRate you'd be better off using our iVersion library, which was specifically designed for the purpose).
 
+* MinVersionString
+
+The minimum application version string (CFBundleShortVersionString) that the notification should be displayed on. This is useful for notifications that refer to features in specific application versions in apps that use the bundle version as a auto-incrementing build number.
+
+* MaxVersionString
+
+The maximum application version string (CFBundleShortVersionString) that the notification should be displayed on. This is useful for notifications that refer to features in specific application versions in apps that use the bundle version as a auto-incrementing build number.
 
 Configuration
 --------------

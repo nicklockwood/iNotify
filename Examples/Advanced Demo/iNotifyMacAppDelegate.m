@@ -25,6 +25,9 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	//set app delegate as iVersion delegate
+    //this is technically no longer needed
+    //as the iNotify delegate defaults to the
+    //app delegate unless otherwise specified
 	[iNotify sharedInstance].delegate = self;
 }
 

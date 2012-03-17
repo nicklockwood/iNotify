@@ -1,7 +1,7 @@
 //
 //  iNotify.h
 //
-//  Version 1.4.1
+//  Version 1.5
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -34,7 +34,7 @@
 //
 //  ARC Helper
 //
-//  Version 1.2
+//  Version 1.2.2
 //
 //  Created by Nick Lockwood on 05/01/2012.
 //  Copyright 2012 Charcoal Design
@@ -45,19 +45,18 @@
 //  https://gist.github.com/1563325
 //
 
-
 #ifndef AH_RETAIN
 #if __has_feature(objc_arc)
-#define AH_RETAIN(x) x
-#define AH_RELEASE(x)
-#define AH_AUTORELEASE(x) x
-#define AH_SUPER_DEALLOC
+#define AH_RETAIN(x) (x)
+#define AH_RELEASE(x) (void)(x)
+#define AH_AUTORELEASE(x) (x)
+#define AH_SUPER_DEALLOC (void)(0)
 #else
 #define __AH_WEAK
 #define AH_WEAK assign
-#define AH_RETAIN(x) [x retain]
-#define AH_RELEASE(x) [x release]
-#define AH_AUTORELEASE(x) [x autorelease]
+#define AH_RETAIN(x) [(x) retain]
+#define AH_RELEASE(x) [(x) release]
+#define AH_AUTORELEASE(x) [(x) autorelease]
 #define AH_SUPER_DEALLOC [super dealloc]
 #endif
 #endif
@@ -122,22 +121,23 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 //required for 32-bit Macs
 #ifdef __i386__
 {
-	@private
-	
-	NSDictionary *notificationsDict;
-	NSError *downloadError;
-	NSString *notificationsPlistURL;
-	BOOL showOldestFirst;
-	BOOL showOnFirstLaunch;
-	float checkPeriod;
-	float remindPeriod;
-	NSString *okButtonLabel;
-	NSString *ignoreButtonLabel;
-	NSString *remindButtonLabel;
-	NSString *defaultActionButtonLabel;
-	BOOL checkAtLaunch;
-	BOOL debug;
-	id<iNotifyDelegate> __AH_WEAK delegate;
+    @private
+    
+    NSDictionary *notificationsDict;
+    NSError *downloadError;
+    NSString *notificationsPlistURL;
+    NSString *applicationVersion;
+    BOOL showOldestFirst;
+    BOOL showOnFirstLaunch;
+    float checkPeriod;
+    float remindPeriod;
+    NSString *okButtonLabel;
+    NSString *ignoreButtonLabel;
+    NSString *remindButtonLabel;
+    NSString *defaultActionButtonLabel;
+    BOOL checkAtLaunch;
+    BOOL debug;
+    id<iNotifyDelegate> __AH_WEAK delegate;
 }
 #endif
 
@@ -146,7 +146,10 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 //notifications url - always set this
 @property (nonatomic, copy) NSString *notificationsPlistURL;
 
-//frequency settings - these have sensible defaults
+//application version, used to filter notifications - this is set automatically
+@property (nonatomic, copy) NSString *applicationVersion;
+
+//frquency and sort order settings - these have sensible defaults
 @property (nonatomic, assign) BOOL showOldestFirst;
 @property (nonatomic, assign) BOOL showOnFirstLaunch;
 @property (nonatomic, assign) float checkPeriod;

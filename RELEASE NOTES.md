@@ -1,3 +1,11 @@
+Version 1.5
+
+- Included localisation for French, German, Italian, Spanish and Japanese
+- Added workaround for change in IApplicationWillEnterForegroundNotification implementation in iOS5
+- iNotify delegate now defaults to App Delegate unless otherwise specified
+- iNotify now uses the CFBundleShortVersionString to compare agains the MaxVersion and MinVersion (if available) instead of the CFBundleVersion
+- applicationVersion property is now exposed as a property of iNotify in case you want to override it
+
 Version 1.4.1
 
 - Added automatic support for ARC compile targets

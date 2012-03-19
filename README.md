@@ -28,6 +28,12 @@ ARC Compatibility
 iNotify makes use of the ARC Helper library to automatically work with both ARC and non-ARC projects through conditional compilation. There is no need to exclude iNotify files from the ARC validation process, or to convert iNotify using the ARC conversion tool.
 
 
+Thread Safety
+--------------
+
+iNotify uses threading internally to avoid blocking the UI, but none of the iNotify external interfaces are thread safe and you should not call any methods or set any properties on iNotify except from the main thread.
+
+
 Installation
 --------------
 
@@ -294,3 +300,13 @@ When you build and run the example project for the first time, it will show an a
 Close the message and quit the app. If you relaunch, you will see a new message each time the app launches until all messages in the plist have been viewed, then they will cycle around again.
 
 Normally, messages would be shown less often, but because the debug option is set to YES in the example, the usual notification throttling is ignored. If you set debugging to NO, you will not see an alert each time the app launches, and each unique alert will be shown only once.
+
+
+Advanced Example
+---------------
+
+The advanced example demonstrates how you might implement a completely bespoke iNotify interface using the iNotifyDelegate methods. Automatic checking is disabled and instead the user can opt to download notifications by pressing the "Check for notifcations" button.
+
+When pressed, the app display a progress wheel and then prints the notifications in a console underneath the button.
+
+The example is for Mac OS, but the same thing can be applied on iOS.

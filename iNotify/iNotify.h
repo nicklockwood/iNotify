@@ -139,7 +139,6 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
     BOOL debug;
     id<iNotifyDelegate> __AH_WEAK delegate;
     id visibleAlert;
-    NSString *message;
 }
 #endif
 

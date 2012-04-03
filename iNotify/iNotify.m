@@ -55,7 +55,6 @@ static iNotify *sharedInstance = nil;
 @property (nonatomic, copy) NSDictionary *notificationsDict;
 @property (nonatomic, strong) NSError *downloadError;
 @property (nonatomic, strong) id visibleAlert;
-@property (nonatomic, strong) NSString *message;
 
 @end
 
@@ -78,7 +77,6 @@ static iNotify *sharedInstance = nil;
 @synthesize debug;
 @synthesize delegate;
 @synthesize visibleAlert;
-@synthesize message;
 
 + (iNotify *)sharedInstance
 {
@@ -276,7 +274,6 @@ static iNotify *sharedInstance = nil;
     AH_RELEASE(remindButtonLabel);
     AH_RELEASE(defaultActionButtonLabel);
     AH_RELEASE(visibleAlert);
-    AH_RELEASE(message);
     AH_SUPER_DEALLOC;
 }
 
@@ -378,7 +375,7 @@ static iNotify *sharedInstance = nil;
         
         //get notification details
         NSString *title = [notification objectForKey:iNotifyTitleKey];
-        NSString *_message = [notification objectForKey:iNotifyMessageKey];
+        NSString *message = [notification objectForKey:iNotifyMessageKey];
         NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
         NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey] ?: defaultActionButtonLabel;
         
@@ -393,7 +390,6 @@ static iNotify *sharedInstance = nil;
         
         if (!visibleAlert)
         {
-            self.message = _message;
             
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
         
@@ -529,7 +525,7 @@ static iNotify *sharedInstance = nil;
         if ([view isKindOfClass:[UILabel class]])
         {
             UILabel *label = (UILabel *)view;
-            if ([label.text isEqualToString:self.message])
+            if ([label.text isEqualToString:alertView.message])
             {
                 label.alpha = 1.0f;
                 label.lineBreakMode = UILineBreakModeWordWrap;

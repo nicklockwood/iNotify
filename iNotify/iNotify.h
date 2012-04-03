@@ -1,7 +1,7 @@
 //
 //  iNotify.h
 //
-//  Version 1.5
+//  Version 1.5.1
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -138,6 +138,8 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
     BOOL checkAtLaunch;
     BOOL debug;
     id<iNotifyDelegate> __AH_WEAK delegate;
+    id visibleAlert;
+    NSString *message;
 }
 #endif
 

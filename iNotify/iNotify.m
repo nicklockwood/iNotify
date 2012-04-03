@@ -1,7 +1,7 @@
 //
 //  iNotify.m
 //
-//  Version 1.5
+//  Version 1.5.1
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -54,6 +54,8 @@ static iNotify *sharedInstance = nil;
 
 @property (nonatomic, copy) NSDictionary *notificationsDict;
 @property (nonatomic, strong) NSError *downloadError;
+@property (nonatomic, strong) id visibleAlert;
+@property (nonatomic, strong) NSString *message;
 
 @end
 
@@ -75,7 +77,8 @@ static iNotify *sharedInstance = nil;
 @synthesize checkAtLaunch;
 @synthesize debug;
 @synthesize delegate;
-
+@synthesize visibleAlert;
+@synthesize message;
 
 + (iNotify *)sharedInstance
 {
@@ -134,6 +137,11 @@ static iNotify *sharedInstance = nil;
                                                          name:UIApplicationWillEnterForegroundNotification
                                                        object:nil];
         }
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didRotate)
+                                                     name:UIDeviceOrientationDidChangeNotification
+                                                   object:nil];
 #else
         //register for mac application events
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -267,6 +275,8 @@ static iNotify *sharedInstance = nil;
     AH_RELEASE(ignoreButtonLabel);
     AH_RELEASE(remindButtonLabel);
     AH_RELEASE(defaultActionButtonLabel);
+    AH_RELEASE(visibleAlert);
+    AH_RELEASE(message);
     AH_SUPER_DEALLOC;
 }
 
@@ -368,7 +378,7 @@ static iNotify *sharedInstance = nil;
         
         //get notification details
         NSString *title = [notification objectForKey:iNotifyTitleKey];
-        NSString *message = [notification objectForKey:iNotifyMessageKey];
+        NSString *_message = [notification objectForKey:iNotifyMessageKey];
         NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
         NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey] ?: defaultActionButtonLabel;
         
@@ -381,54 +391,59 @@ static iNotify *sharedInstance = nil;
             }
         }
         
+        if (!visibleAlert)
+        {
+            self.message = _message;
+            
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:nil
-                                              otherButtonTitles:nil];
-        if (actionURL)
-        {
-            [alert addButtonWithTitle:actionButtonLabel];
-            [alert addButtonWithTitle:remindButtonLabel];
-            [alert addButtonWithTitle:ignoreButtonLabel];
-            alert.cancelButtonIndex = 2;
-        }
-        else
-        {
-            [alert addButtonWithTitle:okButtonLabel];
-            alert.cancelButtonIndex = 0;
-        }
-        
-        [alert show];
-        AH_RELEASE(alert);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                            message:message
+                                                           delegate:self
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:nil];
+            if (actionURL)
+            {
+                [alert addButtonWithTitle:actionButtonLabel];
+                [alert addButtonWithTitle:remindButtonLabel];
+                [alert addButtonWithTitle:ignoreButtonLabel];
+                alert.cancelButtonIndex = 2;
+            }
+            else
+            {
+                [alert addButtonWithTitle:okButtonLabel];
+                alert.cancelButtonIndex = 0;
+            }
+            
+            self.visibleAlert = alert;
+            [visibleAlert show];
+            AH_RELEASE(alert);
+            
 #else
-        NSAlert *alert = nil;
-        
-        if (actionURL)
-        {
-            alert = [NSAlert alertWithMessageText:title
-                                    defaultButton:actionButtonLabel
-                                  alternateButton:ignoreButtonLabel
-                                      otherButton:remindButtonLabel
-                        informativeTextWithFormat:message];
-        }
-        else
-        {
-            alert = [NSAlert alertWithMessageText:title
-                                    defaultButton:okButtonLabel
-                                  alternateButton:nil
-                                      otherButton:nil
-                        informativeTextWithFormat:message];
-        }
-        
-        [alert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
-                          modalDelegate:self
-                         didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-                            contextInfo:nil];
+            
+            if (actionURL)
+            {
+                self.visibleAlert = [NSAlert alertWithMessageText:title
+                                                    defaultButton:actionButtonLabel
+                                                  alternateButton:ignoreButtonLabel
+                                                      otherButton:remindButtonLabel
+                                        informativeTextWithFormat:message];
+            }
+            else
+            {
+                self.visibleAlert = [NSAlert alertWithMessageText:title
+                                                    defaultButton:okButtonLabel
+                                                  alternateButton:nil
+                                                      otherButton:nil
+                                        informativeTextWithFormat:message];
+            }
+            
+            [visibleAlert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
+                                     modalDelegate:self
+                                    didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+                                       contextInfo:nil];
 #endif
-        
+        }
     }
 }
 
@@ -500,9 +515,51 @@ static iNotify *sharedInstance = nil;
 }
 
 #pragma mark -
-#pragma mark UIAlertViewDelegate methods
+#pragma mark UIAlertView methods
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+
+- (void)resizeAlert
+{
+    CGFloat offset = 0.0f;
+    UIAlertView *alertView = visibleAlert;
+    for (UIView *view in alertView.subviews)
+    {
+        CGRect frame = view.frame;
+        if ([view isKindOfClass:[UILabel class]])
+        {
+            UILabel *label = (UILabel *)view;
+            if ([label.text isEqualToString:self.message])
+            {
+                label.alpha = 1.0f;
+                label.lineBreakMode = UILineBreakModeWordWrap;
+                label.numberOfLines = 0;
+                [label sizeToFit];
+                offset = label.frame.size.height - frame.size.height;
+                frame.size.height = label.frame.size.height;
+            }
+        }
+        else if ([view isKindOfClass:[UIControl class]])
+        {
+            frame.origin.y += offset;
+        }
+        view.frame = frame;
+    }
+    CGRect frame = alertView.frame;
+    frame.origin.y -= roundf(offset/2.0f);
+    frame.size.height += offset;
+    alertView.frame = frame;
+}
+
+- (void)didRotate
+{
+    [self performSelectorOnMainThread:@selector(resizeAlert) withObject:nil waitUntilDone:NO];
+}
+
+- (void)willPresentAlertView:(UIAlertView *)alertView
+{
+    [self resizeAlert];
+}
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -558,6 +615,9 @@ static iNotify *sharedInstance = nil;
         //open URL
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:actionURL]];
     }
+    
+    //release alert
+    self.visibleAlert = nil;
 }
 
 #else

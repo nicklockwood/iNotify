@@ -1,3 +1,7 @@
+Version 1.5.1
+
+- Added logic to prevent UIAlertView collapsing in landscape mode
+
 Version 1.5
 
 - Included localisation for French, German, Italian, Spanish and Japanese

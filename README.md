@@ -101,7 +101,7 @@ The dictionary may also include the following optional keys:
 
 A URL relating to the notification. If the ActionURL is omitted, the message will not feature an action button but will simply have an OK button to dismiss the message.
 
-Note that the ActionURL can be used to launch other apps, or to trigger behaviour within your app by specifying a custom URL schema handler.
+Note that the ActionURL can be used to launch other apps, or to trigger behaviour within your app by specifying a custom URL schema handler. If the action URL cannot be opened (because the app is not installed), the alert will not be shown.
 
 * ActionButton
 

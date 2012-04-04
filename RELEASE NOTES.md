@@ -1,3 +1,8 @@
+Version 1.5.2
+
+- Improved UIAlertView resizing logic
+- Alert is no longer displayed if ActionURL cannot be opened on the device
+
 Version 1.5.1
 
 - Added logic to prevent UIAlertView collapsing in landscape mode

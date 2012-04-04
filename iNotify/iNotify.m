@@ -1,7 +1,7 @@
 //
 //  iNotify.m
 //
-//  Version 1.5.1
+//  Version 1.5.2
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -55,6 +55,8 @@ static iNotify *sharedInstance = nil;
 @property (nonatomic, copy) NSDictionary *notificationsDict;
 @property (nonatomic, strong) NSError *downloadError;
 @property (nonatomic, strong) id visibleAlert;
+
+- (BOOL)canOpenURL:(NSURL *)URL;
 
 @end
 
@@ -379,6 +381,12 @@ static iNotify *sharedInstance = nil;
         NSString *actionURL = [notification objectForKey:iNotifyActionURLKey];
         NSString *actionButtonLabel = [notification objectForKey:iNotifyActionButtonKey] ?: defaultActionButtonLabel;
         
+        //check action url can be opened
+        if (actionURL && ![self canOpenURL:[NSURL URLWithString:actionURL]])
+        {
+            return;
+        }
+        
         //check delegate
         if ([self.delegate respondsToSelector:@selector(iNotifyShouldDisplayNotificationWithKey:details:)])
         {
@@ -423,7 +431,7 @@ static iNotify *sharedInstance = nil;
                                                     defaultButton:actionButtonLabel
                                                   alternateButton:ignoreButtonLabel
                                                       otherButton:remindButtonLabel
-                                        informativeTextWithFormat:message];
+                                        informativeTextWithFormat:@"%@", message];
             }
             else
             {
@@ -431,7 +439,7 @@ static iNotify *sharedInstance = nil;
                                                     defaultButton:okButtonLabel
                                                   alternateButton:nil
                                                       otherButton:nil
-                                        informativeTextWithFormat:message];
+                                        informativeTextWithFormat:@"%@", message];
             }
             
             [visibleAlert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]
@@ -514,47 +522,70 @@ static iNotify *sharedInstance = nil;
 #pragma mark UIAlertView methods
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-
-- (void)resizeAlert
+            
+- (BOOL)canOpenURL:(NSURL *)URL
 {
-    CGFloat offset = 0.0f;
-    UIAlertView *alertView = visibleAlert;
-    for (UIView *view in alertView.subviews)
+    return [[UIApplication sharedApplication] canOpenURL:URL];
+}
+
+- (void)resizeAlertView:(UIAlertView *)alertView
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone &&
+        UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
-        CGRect frame = view.frame;
-        if ([view isKindOfClass:[UILabel class]])
+        CGFloat max = alertView.window.bounds.size.height - alertView.frame.size.height - 10.0f;
+        CGFloat offset = 0.0f;
+        for (UIView *view in alertView.subviews)
         {
-            UILabel *label = (UILabel *)view;
-            if ([label.text isEqualToString:alertView.message])
+            CGRect frame = view.frame;
+            if ([view isKindOfClass:[UILabel class]])
             {
-                label.alpha = 1.0f;
-                label.lineBreakMode = UILineBreakModeWordWrap;
-                label.numberOfLines = 0;
-                [label sizeToFit];
-                offset = label.frame.size.height - frame.size.height;
-                frame.size.height = label.frame.size.height;
+                UILabel *label = (UILabel *)view;
+                if ([label.text isEqualToString:alertView.message])
+                {
+                    label.alpha = 1.0f;
+                    label.lineBreakMode = UILineBreakModeWordWrap;
+                    label.numberOfLines = 0;
+                    [label sizeToFit];
+                    offset = label.frame.size.height - frame.size.height;
+                    frame.size.height = label.frame.size.height;
+                    if (offset > max)
+                    {
+                        frame.size.height -= (offset - max);
+                        offset = max;
+                    }
+                    if (offset > max - 10.0f)
+                    {
+                        frame.size.height -= (offset - max - 10);
+                        frame.origin.y += (offset - max - 10) / 2.0f;
+                    }
+                }
             }
+            else if ([view isKindOfClass:[UITextView class]])
+            {
+                view.alpha = 0.0f;
+            }
+            else if ([view isKindOfClass:[UIControl class]])
+            {
+                frame.origin.y += offset;
+            }
+            view.frame = frame;
         }
-        else if ([view isKindOfClass:[UIControl class]])
-        {
-            frame.origin.y += offset;
-        }
-        view.frame = frame;
+        CGRect frame = alertView.frame;
+        frame.origin.y -= roundf(offset/2.0f);
+        frame.size.height += offset;
+        alertView.frame = frame;
     }
-    CGRect frame = alertView.frame;
-    frame.origin.y -= roundf(offset/2.0f);
-    frame.size.height += offset;
-    alertView.frame = frame;
 }
 
 - (void)didRotate
 {
-    [self performSelectorOnMainThread:@selector(resizeAlert) withObject:nil waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(resizeAlertView:) withObject:visibleAlert waitUntilDone:NO];
 }
 
 - (void)willPresentAlertView:(UIAlertView *)alertView
 {
-    [self resizeAlert];
+    [self resizeAlertView:alertView];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -617,6 +648,11 @@ static iNotify *sharedInstance = nil;
 }
 
 #else
+            
+- (BOOL)canOpenURL:(NSURL *)URL
+{
+    return [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:URL] != nil;
+}
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {

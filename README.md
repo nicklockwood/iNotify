@@ -162,6 +162,14 @@ The button label for the button the user presses if they don't want to view a no
 
 The default text to use for the action button label if it is not specified in the notifications plist.
 
+    @property (nonatomic, assign) BOOL disableAlertViewResizing;
+
+On iPhone, iNotify includes some logic to resize the alert view to ensure that your message doesn't become truncated in landscape mode. The code to do this is a rather nasty hack, so if your alert text is very short and/or your app only needs to function in portrait mode on iPhone, you may wish to set this property to YES, which may help make your app more robust against future iOS updates.
+
+    @property (nonatomic, assign) BOOL onlyPromptIfMainWindowIsAvailable;
+
+This setting is applicable to Mac OS only. By default, on Mac OS the iNotify alert is displayed as sheet on the main window. Some applications do not have a main window, so this approach doesn't work. For such applications, set this property to NO to allow the iNotify alert to be displayed as a regular modal window.
+
     @property (nonatomic, assign) BOOL checkAtLaunch;
 
 Set this to NO to disable automatic checking for notifications when the application launches or returns from background. Note that if automatic checks are disabled, you can still trigger a check manually by calling the `checkForNotifications` method.

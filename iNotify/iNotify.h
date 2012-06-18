@@ -1,7 +1,7 @@
 //
 //  iNotify.h
 //
-//  Version 1.5.2
+//  Version 1.5.3
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -34,7 +34,7 @@
 //
 //  ARC Helper
 //
-//  Version 1.2.2
+//  Version 1.3.1
 //
 //  Created by Nick Lockwood on 05/01/2012.
 //  Copyright 2012 Charcoal Design
@@ -51,6 +51,7 @@
 #define AH_RELEASE(x) (void)(x)
 #define AH_AUTORELEASE(x) (x)
 #define AH_SUPER_DEALLOC (void)(0)
+#define __AH_BRIDGE __bridge
 #else
 #define __AH_WEAK
 #define AH_WEAK assign
@@ -58,14 +59,16 @@
 #define AH_RELEASE(x) [(x) release]
 #define AH_AUTORELEASE(x) [(x) autorelease]
 #define AH_SUPER_DEALLOC [super dealloc]
+#define __AH_BRIDGE
 #endif
 #endif
 
 //  Weak reference support
 
+#import <Availability.h>
 #ifndef AH_WEAK
 #if defined __IPHONE_OS_VERSION_MIN_REQUIRED
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_4_3
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000
 #define __AH_WEAK __weak
 #define AH_WEAK weak
 #else
@@ -73,7 +76,7 @@
 #define AH_WEAK unsafe_unretained
 #endif
 #elif defined __MAC_OS_X_VERSION_MIN_REQUIRED
-#if __MAC_OS_X_VERSION_MIN_REQUIRED > __MAC_10_6
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070
 #define __AH_WEAK __weak
 #define AH_WEAK weak
 #else
@@ -123,22 +126,25 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 {
     @private
     
-    NSDictionary *notificationsDict;
-    NSError *downloadError;
-    NSString *notificationsPlistURL;
-    NSString *applicationVersion;
-    BOOL showOldestFirst;
-    BOOL showOnFirstLaunch;
-    float checkPeriod;
-    float remindPeriod;
-    NSString *okButtonLabel;
-    NSString *ignoreButtonLabel;
-    NSString *remindButtonLabel;
-    NSString *defaultActionButtonLabel;
-    BOOL checkAtLaunch;
-    BOOL debug;
-    id<iNotifyDelegate> __AH_WEAK delegate;
-    id visibleAlert;
+    NSDictionary *_notificationsDict;
+    NSError *_downloadError;
+    NSString *_notificationsPlistURL;
+    NSString *_applicationVersion;
+    BOOL _showOldestFirst;
+    BOOL _showOnFirstLaunch;
+    float _checkPeriod;
+    float _remindPeriod;
+    NSString *_okButtonLabel;
+    NSString *_ignoreButtonLabel;
+    NSString *_remindButtonLabel;
+    NSString *_defaultActionButtonLabel;
+    BOOL _disableAlertViewResizing;
+    BOOL _onlyPromptIfMainWindowIsAvailable;
+    BOOL _checkAtLaunch;
+    BOOL _debug;
+    id<iNotifyDelegate> __AH_WEAK _delegate;
+    id _visibleAlert;
+    BOOL _currentlyChecking;
 }
 #endif
 
@@ -162,7 +168,9 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 @property (nonatomic, copy) NSString *remindButtonLabel;
 @property (nonatomic, copy) NSString *defaultActionButtonLabel;
 
-//debugging and automatic checks
+//debugging and notification overrides
+@property (nonatomic, assign) BOOL disableAlertViewResizing;
+@property (nonatomic, assign) BOOL onlyPromptIfMainWindowIsAvailable;
 @property (nonatomic, assign) BOOL checkAtLaunch;
 @property (nonatomic, assign) BOOL debug;
 

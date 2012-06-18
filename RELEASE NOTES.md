@@ -1,3 +1,10 @@
+Version 1.5.3
+
+- Fixed a bug where advanced properties set in the delegate methods might be subsequently overridden by iNotify
+- Added disableAlertViewResizing option (see README for details)
+- Added explicit 60-second timeout for notification update checks
+- iNotify will now no longer spawn multiple download threads if closed and re-opened whilst performing an update check
+
 Version 1.5.2
 
 - Improved UIAlertView resizing logic

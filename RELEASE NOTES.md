@@ -1,3 +1,7 @@
+Version 1.5.4
+
+- Fixed cache policy so that notifications are no longer cached between requests while app is running
+
 Version 1.5.3
 
 - Fixed a bug where advanced properties set in the delegate methods might be subsequently overridden by iNotify

@@ -1,7 +1,7 @@
 //
 //  iNotify.m
 //
-//  Version 1.5.3
+//  Version 1.5.4
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -115,7 +115,7 @@ static iNotify *sharedInstance = nil;
         }
 
         //retain bundle
-        bundle = AH_RETAIN(bundle);
+        [bundle ah_retain];
     }
 
     //return localised string
@@ -273,16 +273,16 @@ static iNotify *sharedInstance = nil;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    AH_RELEASE(_applicationVersion);
-    AH_RELEASE(_notificationsDict);
-    AH_RELEASE(_downloadError);
-    AH_RELEASE(_notificationsPlistURL);
-    AH_RELEASE(_okButtonLabel);
-    AH_RELEASE(_ignoreButtonLabel);
-    AH_RELEASE(_remindButtonLabel);
-    AH_RELEASE(_defaultActionButtonLabel);
-    AH_RELEASE(_visibleAlert);
-    AH_SUPER_DEALLOC;
+    [_applicationVersion release];
+    [_notificationsDict release];
+    [_downloadError release];
+    [_notificationsPlistURL release];
+    [_okButtonLabel release];
+    [_ignoreButtonLabel release];
+    [_remindButtonLabel release];
+    [_defaultActionButtonLabel release];
+    [_visibleAlert release];
+    [super ah_dealloc];
 }
 
 #pragma mark -
@@ -292,10 +292,10 @@ static iNotify *sharedInstance = nil;
 {
     if (notifications != _notificationsDict)
     {
-        AH_RELEASE(_notificationsDict);
+        [_notificationsDict release];
         
         //filter out ignored and viewed notifications
-        NSMutableDictionary *filteredNotifications = AH_AUTORELEASE([notifications mutableCopy]);
+        NSMutableDictionary *filteredNotifications = [[notifications mutableCopy] autorelease];
         [filteredNotifications removeObjectsForKeys:self.ignoredNotifications];
         [filteredNotifications removeObjectsForKeys:self.viewedNotifications];
         
@@ -305,7 +305,7 @@ static iNotify *sharedInstance = nil;
             //reset ignored and viewed lists
             self.ignoredNotifications = nil;
             self.viewedNotifications = nil;
-            filteredNotifications = AH_AUTORELEASE([notifications mutableCopy]);
+            filteredNotifications = [[notifications mutableCopy] autorelease];
         }
         
         //remove notifications exluded for this version
@@ -423,7 +423,7 @@ static iNotify *sharedInstance = nil;
             
             self.visibleAlert = alert;
             [self.visibleAlert show];
-            AH_RELEASE(alert);
+            [alert release];
             
 #else
             
@@ -493,7 +493,7 @@ static iNotify *sharedInstance = nil;
                 NSError *error = nil;
                 NSDictionary *notifications = nil;
                 NSURLResponse *response = nil;
-                NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.notificationsPlistURL] cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:REQUEST_TIMEOUT];
+                NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.notificationsPlistURL] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:REQUEST_TIMEOUT];
                 NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
                 if (data)
                 {

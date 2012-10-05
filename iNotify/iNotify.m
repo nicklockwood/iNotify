@@ -100,7 +100,7 @@ static iNotify *sharedInstance = nil;
     if (bundle == nil)
     {
         //get localisation bundle
-        NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"iNotify" ofType:@"bundle"];
+        NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"iNotify" ofType:@"bundle"];
         bundle = [NSBundle bundleWithPath:bundlePath] ?: [NSBundle mainBundle];
 
         //get correct lproj folder as this doesn't always happen automatically

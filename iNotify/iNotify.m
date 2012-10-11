@@ -84,6 +84,7 @@ static iNotify *sharedInstance = nil;
 @synthesize delegate = _delegate;
 @synthesize visibleAlert = _visibleAlert;
 @synthesize currentlyChecking = _currentlyChecking;
+@synthesize customIcon = _customIcon;
 
 + (iNotify *)sharedInstance
 {
@@ -442,6 +443,10 @@ static iNotify *sharedInstance = nil;
                                                   alternateButton:nil
                                                       otherButton:nil
                                         informativeTextWithFormat:@"%@", message];
+            }
+            
+            if (self.customIcon) {
+                [self.visibleAlert setIcon:self.customIcon];
             }
             
             [self.visibleAlert beginSheetModalForWindow:[[NSApplication sharedApplication] mainWindow]

@@ -1,3 +1,7 @@
+Version 1.5.5
+
+- Moved ARCHelper macros into .m file to avoid affecting other classes
+
 Version 1.5.4
 
 - Fixed cache policy so that notifications are no longer cached between requests while app is running

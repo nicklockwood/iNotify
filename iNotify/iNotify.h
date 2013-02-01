@@ -1,15 +1,14 @@
 //
 //  iNotify.h
 //
-//  Version 1.5.4
+//  Version 1.5.5
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
 //
 //  Distributed under the permissive zlib license
-//  Get the latest version from either of these locations:
+//  Get the latest version from here:
 //
-//  http://charcoaldesign.co.uk/source/cocoa#inotify
 //  https://github.com/nicklockwood/iNotify
 //
 //  This software is provided 'as-is', without any express or implied
@@ -31,51 +30,19 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
-//
-//  ARC Helper
-//
-//  Version 2.1
-//
-//  Created by Nick Lockwood on 05/01/2012.
-//  Copyright 2012 Charcoal Design
-//
-//  Distributed under the permissive zlib license
-//  Get the latest version from here:
-//
-//  https://gist.github.com/1563325
-//
 
-#ifndef ah_retain
-#if __has_feature(objc_arc)
-#define ah_retain self
-#define ah_dealloc self
-#define release self
-#define autorelease self
-#else
-#define ah_retain retain
-#define ah_dealloc dealloc
-#define __bridge
-#endif
-#endif
-
-//  Weak delegate support
-
-#ifndef ah_weak
 #import <Availability.h>
-#if (__has_feature(objc_arc)) && \
-((defined __IPHONE_OS_VERSION_MIN_REQUIRED && \
-__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0) || \
-(defined __MAC_OS_X_VERSION_MIN_REQUIRED && \
-__MAC_OS_X_VERSION_MIN_REQUIRED > __MAC_10_7))
-#define ah_weak weak
-#define __ah_weak __weak
+#undef weak_delegate
+#undef __weak_delegate
+#if __has_feature(objc_arc_weak) && \
+(!(defined __MAC_OS_X_VERSION_MIN_REQUIRED) || \
+__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8)
+#define weak_delegate weak
+#define __weak_delegate __weak
 #else
-#define ah_weak unsafe_unretained
-#define __ah_weak __unsafe_unretained
+#define weak_delegate unsafe_unretained
+#define __weak_delegate __unsafe_unretained
 #endif
-#endif
-
-//  ARC Helper ends
 
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
@@ -131,7 +98,7 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
     BOOL _onlyPromptIfMainWindowIsAvailable;
     BOOL _checkAtLaunch;
     BOOL _debug;
-    id<iNotifyDelegate> __ah_weak _delegate;
+    id<iNotifyDelegate> __weak_delegate _delegate;
     id _visibleAlert;
     BOOL _currentlyChecking;
 }
@@ -168,7 +135,7 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 @property (nonatomic, copy) NSArray *viewedNotifications;
 @property (nonatomic, strong) NSDate *lastChecked;
 @property (nonatomic, strong) NSDate *lastReminded;
-@property (nonatomic, ah_weak) id<iNotifyDelegate> delegate;
+@property (nonatomic, weak_delegate) id<iNotifyDelegate> delegate;
 
 //manually control behaviour
 - (NSString *)nextNotificationInDict:(NSDictionary *)dict;

@@ -1,7 +1,7 @@
 //
 //  iNotify.m
 //
-//  Version 1.5.5
+//  Version 1.5.6
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -30,37 +30,14 @@
 //  3. This notice may not be removed or altered from any source distribution.
 //
 
-//
-//  ARC Helper
-//
-//  Version 2.1
-//
-//  Created by Nick Lockwood on 05/01/2012.
-//  Copyright 2012 Charcoal Design
-//
-//  Distributed under the permissive zlib license
-//  Get the latest version from here:
-//
-//  https://gist.github.com/1563325
-//
-
-#ifndef ah_retain
-#if __has_feature(objc_arc)
-#define ah_retain self
-#define ah_dealloc self
-#define release self
-#define autorelease self
-#else
-#define ah_retain retain
-#define ah_dealloc dealloc
-#define __bridge
-#endif
-#endif
-
-//  ARC Helper ends
-
 
 #import "iNotify.h"
+
+
+#import <Availability.h>
+#if !__has_feature(objc_arc)
+#error This class requires automatic reference counting
+#endif
 
 
 static NSString *const iNotifyIgnoredNotificationsKey = @"iNotifyIgnoredNotifications";
@@ -76,11 +53,7 @@ static iNotify *sharedInstance = nil;
 #define REQUEST_TIMEOUT 60.0
 
 
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-@interface iNotify() <UIAlertViewDelegate>
-#else
 @interface iNotify()
-#endif
 
 @property (nonatomic, copy) NSDictionary *notificationsDict;
 @property (nonatomic, strong) NSError *downloadError;
@@ -94,26 +67,6 @@ static iNotify *sharedInstance = nil;
 
 @implementation iNotify
 
-@synthesize applicationVersion = _applicationVersion;
-@synthesize notificationsDict = _notificationsDict;
-@synthesize downloadError = _downloadError;
-@synthesize notificationsPlistURL = _notificationsPlistURL;
-@synthesize showOldestFirst = _showOldestFirst;
-@synthesize showOnFirstLaunch = _showOnFirstLaunch;
-@synthesize checkPeriod = _checkPeriod;
-@synthesize remindPeriod = _remindPeriod;
-@synthesize okButtonLabel = _okButtonLabel;
-@synthesize ignoreButtonLabel = _ignoreButtonLabel;
-@synthesize remindButtonLabel = _remindButtonLabel;
-@synthesize defaultActionButtonLabel = _defaultActionButtonLabel;
-@synthesize disableAlertViewResizing = _disableAlertViewResizing;
-@synthesize onlyPromptIfMainWindowIsAvailable = _onlyPromptIfMainWindowIsAvailable;
-@synthesize checkAtLaunch = _checkAtLaunch;
-@synthesize debug = _debug;
-@synthesize delegate = _delegate;
-@synthesize visibleAlert = _visibleAlert;
-@synthesize currentlyChecking = _currentlyChecking;
-
 + (iNotify *)sharedInstance
 {
     if (sharedInstance == nil)
@@ -123,32 +76,27 @@ static iNotify *sharedInstance = nil;
     return sharedInstance;
 }
 
-- (NSString *)localizedStringForKey:(NSString *)key
+- (NSString *)localizedStringForKey:(NSString *)key withDefault:(NSString *)defaultString
 {
     static NSBundle *bundle = nil;
     if (bundle == nil)
     {
-        //get localisation bundle
-        NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"iNotify" ofType:@"bundle"];
-        bundle = [NSBundle bundleWithPath:bundlePath] ?: [NSBundle mainBundle];
-
-        //get correct lproj folder as this doesn't always happen automatically
-        for (NSString *language in [NSLocale preferredLanguages])
+        NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"iNotify" ofType:@"bundle"];
+        if (self.useAllAvailableLanguages)
         {
-            if ([[bundle localizations] containsObject:language])
+            for (NSString *language in [@[[[NSLocale currentLocale] localeIdentifier]] arrayByAddingObjectsFromArray:[NSLocale preferredLanguages]])
             {
-                bundlePath = [bundle pathForResource:language ofType:@"lproj"];
-                bundle = [NSBundle bundleWithPath:bundlePath];
-                break;
+                if ([[bundle localizations] containsObject:language])
+                {
+                    bundlePath = [bundle pathForResource:language ofType:@"lproj"];
+                    break;
+                }
             }
         }
-
-        //retain bundle
-        [bundle ah_retain];
+        bundle = [NSBundle bundleWithPath:bundlePath] ?: [NSBundle mainBundle];
     }
-
-    //return localised string
-    return [bundle localizedStringForKey:key value:nil table:nil];
+    defaultString = [bundle localizedStringForKey:key value:defaultString table:nil];
+    return [[NSBundle mainBundle] localizedStringForKey:key value:defaultString table:nil];
 }
 
 - (iNotify *)init
@@ -156,7 +104,7 @@ static iNotify *sharedInstance = nil;
     if ((self = [super init]))
     {
         
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+#if TARGET_OS_IPHONE
         
         //register for iphone application events
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -164,13 +112,10 @@ static iNotify *sharedInstance = nil;
                                                      name:UIApplicationDidFinishLaunchingNotification
                                                    object:nil];
         
-        if (&UIApplicationWillEnterForegroundNotification)
-        {
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(applicationWillEnterForeground:)
-                                                         name:UIApplicationWillEnterForegroundNotification
-                                                       object:nil];
-        }
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationWillEnterForeground:)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didRotate)
@@ -200,10 +145,10 @@ static iNotify *sharedInstance = nil;
         
         //default button text, don't edit these here; if you want to provide your
         //own defaults then configure them using the setters/getters
-        self.okButtonLabel = [self localizedStringForKey:@"OK"];
-        self.ignoreButtonLabel = [self localizedStringForKey:@"Ignore"];
-        self.remindButtonLabel = [self localizedStringForKey:@"Remind Me Later"];
-        self.defaultActionButtonLabel = [self localizedStringForKey:@"More Info"];
+        self.okButtonLabel = [self localizedStringForKey:@"OK" withDefault:@"OK"];
+        self.ignoreButtonLabel = [self localizedStringForKey:@"Ignore" withDefault:@"Ignore"];
+        self.remindButtonLabel = [self localizedStringForKey:@"Remind Me Later" withDefault:@"Remind Me Later"];
+        self.defaultActionButtonLabel = [self localizedStringForKey:@"More Info" withDefault:@"More Info"];
     }
     return self;
 }
@@ -213,13 +158,13 @@ static iNotify *sharedInstance = nil;
     if (_delegate == nil)
     {
         
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-        
-        _delegate = (id<iNotifyDelegate>)[[UIApplication sharedApplication] delegate];
+#if TARGET_OS_IPHONE
+#define APP_CLASS UIApplication
 #else
-        _delegate = (id<iNotifyDelegate>)[[NSApplication sharedApplication] delegate];
+#define APP_CLASS NSApplication
 #endif
         
+        _delegate = (id<iNotifyDelegate>)[[APP_CLASS sharedApplication] delegate];
     }
     return _delegate;
 }
@@ -301,17 +246,6 @@ static iNotify *sharedInstance = nil;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [_applicationVersion release];
-    [_notificationsDict release];
-    [_downloadError release];
-    [_notificationsPlistURL release];
-    [_okButtonLabel release];
-    [_ignoreButtonLabel release];
-    [_remindButtonLabel release];
-    [_defaultActionButtonLabel release];
-    [_visibleAlert release];
-    [super ah_dealloc];
 }
 
 #pragma mark -
@@ -321,10 +255,8 @@ static iNotify *sharedInstance = nil;
 {
     if (notifications != _notificationsDict)
     {
-        [_notificationsDict release];
-        
         //filter out ignored and viewed notifications
-        NSMutableDictionary *filteredNotifications = [[notifications mutableCopy] autorelease];
+        NSMutableDictionary *filteredNotifications = [notifications mutableCopy];
         [filteredNotifications removeObjectsForKeys:self.ignoredNotifications];
         [filteredNotifications removeObjectsForKeys:self.viewedNotifications];
         
@@ -334,7 +266,7 @@ static iNotify *sharedInstance = nil;
             //reset ignored and viewed lists
             self.ignoredNotifications = nil;
             self.viewedNotifications = nil;
-            filteredNotifications = [[notifications mutableCopy] autorelease];
+            filteredNotifications = [notifications mutableCopy];
         }
         
         //remove notifications exluded for this version
@@ -361,7 +293,8 @@ static iNotify *sharedInstance = nil;
 - (void)downloadedNotificationsData
 {
     
-#ifndef __IPHONE_OS_VERSION_MAX_ALLOWED
+#if TARGET_OS_IPHONE
+#else
     
     //only show when main window is available
     if (self.onlyPromptIfMainWindowIsAvailable && ![[NSApplication sharedApplication] mainWindow])
@@ -382,14 +315,6 @@ static iNotify *sharedInstance = nil;
         {
             [self.delegate iNotifyNotificationsCheckDidFailWithError:self.downloadError];
         }
-        
-        //deprecated code path
-        else if ([self.delegate respondsToSelector:@selector(iNotifyNotificationsCheckFailed:)])
-        {
-            NSLog(@"iNotifyNotificationsCheckFailed: delegate method is deprecated, use iNotifyNotificationsCheckDidFailWithError: instead");
-            [self.delegate performSelector:@selector(iNotifyNotificationsCheckFailed:) withObject:self.downloadError];
-        }
-        
         return;
     }
     
@@ -430,8 +355,8 @@ static iNotify *sharedInstance = nil;
         if (!self.visibleAlert)
         {
             
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-        
+#if TARGET_OS_IPHONE
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                             message:message
                                                            delegate:self
@@ -452,10 +377,7 @@ static iNotify *sharedInstance = nil;
             
             self.visibleAlert = alert;
             [self.visibleAlert show];
-            [alert release];
-            
 #else
-            
             if (actionURL)
             {
                 self.visibleAlert = [NSAlert alertWithMessageText:title
@@ -527,14 +449,7 @@ static iNotify *sharedInstance = nil;
                 if (data)
                 {
                     NSPropertyListFormat format;
-                    if ([NSPropertyListSerialization respondsToSelector:@selector(propertyListWithData:options:format:error:)])
-                    {
-                        notifications = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:&format error:&error];
-                    }
-                    else
-                    {
-                        notifications = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:0 format:&format errorDescription:NULL];
-                    }
+                    notifications = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:&format error:&error];
                 }
                 [self performSelectorOnMainThread:@selector(setDownloadError:) withObject:error waitUntilDone:YES];
                 [self performSelectorOnMainThread:@selector(setNotificationsDict:) withObject:notifications waitUntilDone:YES];
@@ -557,8 +472,8 @@ static iNotify *sharedInstance = nil;
 #pragma mark -
 #pragma mark UIAlertView methods
 
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-            
+#if TARGET_OS_IPHONE
+
 - (BOOL)canOpenURL:(NSURL *)URL
 {
     return [[UIApplication sharedApplication] canOpenURL:URL];
@@ -566,7 +481,8 @@ static iNotify *sharedInstance = nil;
 
 - (void)resizeAlertView:(UIAlertView *)alertView
 {
-    if (!self.disableAlertViewResizing && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone &&
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 7.0f &&
+        UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone &&
         UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
         CGFloat max = alertView.window.bounds.size.height - alertView.frame.size.height - 10.0f;
@@ -748,7 +664,7 @@ static iNotify *sharedInstance = nil;
 
 #endif
 
-- (void)applicationLaunched:(NSNotification *)notification
+- (void)applicationLaunched:(__unused NSNotification *)notification
 {
     if (self.checkAtLaunch && [self shouldCheckForNotifications])
     {
@@ -756,9 +672,9 @@ static iNotify *sharedInstance = nil;
     }
 }
 
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+#if TARGET_OS_IPHONE
 
-- (void)applicationWillEnterForeground:(NSNotification *)notification
+- (void)applicationWillEnterForeground:(__unused NSNotification *)notification
 {
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground)
     {

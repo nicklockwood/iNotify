@@ -1,7 +1,5 @@
 iNotify
 
-Version 1.5.5, February 1st, 2013
-
 Copyright (C) 2011 Charcoal Design
 
 This software is provided 'as-is', without any express or implied

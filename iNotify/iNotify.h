@@ -1,7 +1,7 @@
 //
 //  iNotify.h
 //
-//  Version 1.5.5
+//  Version 1.5.6
 //
 //  Created by Nick Lockwood on 26/01/2011.
 //  Copyright 2011 Charcoal Design
@@ -33,15 +33,11 @@
 
 #import <Availability.h>
 #undef weak_delegate
-#undef __weak_delegate
 #if __has_feature(objc_arc_weak) && \
-(!(defined __MAC_OS_X_VERSION_MIN_REQUIRED) || \
-__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8)
+(TARGET_OS_IPHONE || __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8)
 #define weak_delegate weak
-#define __weak_delegate __weak
 #else
 #define weak_delegate unsafe_unretained
-#define __weak_delegate __unsafe_unretained
 #endif
 
 
@@ -77,33 +73,6 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 
 @interface iNotify : NSObject
 
-//required for 32-bit Macs
-#ifdef __i386__
-{
-    @private
-    
-    NSDictionary *_notificationsDict;
-    NSError *_downloadError;
-    NSString *_notificationsPlistURL;
-    NSString *_applicationVersion;
-    BOOL _showOldestFirst;
-    BOOL _showOnFirstLaunch;
-    float _checkPeriod;
-    float _remindPeriod;
-    NSString *_okButtonLabel;
-    NSString *_ignoreButtonLabel;
-    NSString *_remindButtonLabel;
-    NSString *_defaultActionButtonLabel;
-    BOOL _disableAlertViewResizing;
-    BOOL _onlyPromptIfMainWindowIsAvailable;
-    BOOL _checkAtLaunch;
-    BOOL _debug;
-    id<iNotifyDelegate> __weak_delegate _delegate;
-    id _visibleAlert;
-    BOOL _currentlyChecking;
-}
-#endif
-
 + (iNotify *)sharedInstance;
 
 //notifications url - always set this
@@ -125,7 +94,7 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 @property (nonatomic, copy) NSString *defaultActionButtonLabel;
 
 //debugging and notification overrides
-@property (nonatomic, assign) BOOL disableAlertViewResizing;
+@property (nonatomic, assign) BOOL useAllAvailableLanguages;
 @property (nonatomic, assign) BOOL onlyPromptIfMainWindowIsAvailable;
 @property (nonatomic, assign) BOOL checkAtLaunch;
 @property (nonatomic, assign) BOOL debug;

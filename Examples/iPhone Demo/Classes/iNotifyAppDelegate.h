@@ -12,8 +12,8 @@
 
 @interface iNotifyAppDelegate : NSObject <UIApplicationDelegate>
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet iNotifyViewController *viewController;
+@property (nonatomic) IBOutlet UIWindow *window;
+@property (nonatomic) IBOutlet iNotifyViewController *viewController;
 
 @end
 

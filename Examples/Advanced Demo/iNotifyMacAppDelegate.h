@@ -12,9 +12,9 @@
 
 @interface iNotifyMacAppDelegate : NSObject <NSApplicationDelegate, iNotifyDelegate>
 
-@property (assign) IBOutlet NSWindow *window;
-@property (assign) IBOutlet NSProgressIndicator *progressIndicator;
-@property (assign) IBOutlet NSTextView *textView;
+@property (strong) IBOutlet NSWindow *window;
+@property (strong) IBOutlet NSProgressIndicator *progressIndicator;
+@property (strong) IBOutlet NSTextView *textView;
 
 - (IBAction)checkForNotifications:(id)sender;
 

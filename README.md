@@ -15,7 +15,7 @@ Note that the documentation in this file focusses predominantly on iPhone, but t
 Supported iOS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 6.1 / Mac OS 10.8 (Xcode 4.6, Apple LLVM compiler 4.2)
+* Supported build target - iOS 10.1 / Mac OS 10.11 (Xcode 8.1, Apple LLVM compiler 8.0)
 * Earliest supported deployment target - iOS 5.0 / Mac OS 10.7
 * Earliest compatible deployment target - iOS 4.3 / Mac OS 10.6
 
@@ -25,7 +25,9 @@ NOTE: 'Supported' means that the library has been tested with this version. 'Com
 ARC Compatibility
 ------------------
 
-iNotify makes use of the ARC Helper library to automatically work with both ARC and non-ARC projects through conditional compilation. There is no need to exclude iNotify files from the ARC validation process, or to convert iNotify using the ARC conversion tool.
+As of version 1.5.6, iNotify requires ARC. If you wish to use iNotify in a non-ARC project, just add the -fobjc-arc compiler flag to the iNotify.m class. To do this, go to the Build Phases tab in your target settings, open the Compile Sources group, double-click iNotify.m in the list and type -fobjc-arc into the popover.
+
+If you wish to convert your whole project to ARC, comment out the #error line in iNotify.m, then run the Edit > Refactor > Convert to Objective-C ARC... tool in Xcode and make sure all files that you wish to use ARC for (including iNotify.m) are checked.
 
 
 Thread Safety
@@ -318,3 +320,84 @@ The advanced example demonstrates how you might implement a completely bespoke i
 When pressed, the app display a progress wheel and then prints the notifications in a console underneath the button.
 
 The example is for Mac OS, but the same thing can be applied on iOS.
+
+
+Release Notes
+--------------
+
+Version 1.5.6
+
+- Updated for iOS 10 and Xcode 8
+
+Version 1.5.5
+
+- Moved ARCHelper macros into .m file to avoid affecting other classes
+
+Version 1.5.4
+
+- Fixed cache policy so that notifications are no longer cached between requests while app is running
+
+Version 1.5.3
+
+- Fixed a bug where advanced properties set in the delegate methods might be subsequently overridden by iNotify
+- Added disableAlertViewResizing option (see README for details)
+- Added explicit 60-second timeout for notification update checks
+- iNotify will now no longer spawn multiple download threads if closed and re-opened whilst performing an update check
+
+Version 1.5.2
+
+- Improved UIAlertView resizing logic
+- Alert is no longer displayed if ActionURL cannot be opened on the device
+
+Version 1.5.1
+
+- Added logic to prevent UIAlertView collapsing in landscape mode
+
+Version 1.5
+
+- Included localisation for French, German, Italian, Spanish and Japanese
+- Added workaround for change in UIApplicationWillEnterForegroundNotification implementation in iOS5
+- iNotify delegate now defaults to App Delegate unless otherwise specified
+- iNotify now uses the CFBundleShortVersionString to compare agains the MaxVersion and MinVersion (if available) instead of the CFBundleVersion
+- applicationVersion property is now exposed as a property of iNotify in case you want to override it
+
+Version 1.4.1
+
+- Added automatic support for ARC compile targets
+- Now requires Apple LLVM 3.0 compiler target
+
+Version 1.4
+
+- Notification messages can now be restricted to specific application versions
+- Added additional delegate methods
+- Renamed disabled property to checkAtLaunch for clarity
+
+Version 1.3.2
+
+- Fixed bug whereby ignored or viewed notifications would continue to appear.
+
+Version 1.3.1
+
+- Fixed crash on iOS versions before 4.0 when downloading notifications.
+
+Version 1.3
+
+- Added delegate and additional accessor properties for custom behaviour
+- Added advanced example project to demonstrate use of the delegate protocol
+- Added explicit ivars to support i386 (32bit x86) targets
+
+Version 1.2
+
+- Now compatible with iOS 3.x
+
+Version 1.1
+
+- Configuration no longer involves modifying iNotify.h file
+- Now detects application launch and app switching events automatically
+- Fixed bug in Mac code path
+- Mac and iPhone demos now included
+- Simpler to localise
+
+Version 1.0
+
+- Initial release.

@@ -313,7 +313,7 @@ Normally, messages would be shown less often, but because the debug option is se
 Advanced Example
 ---------------
 
-The advanced example demonstrates how you might implement a completely bespoke iNotify interface using the iNotifyDelegate methods. Automatic checking is disabled and instead the user can opt to download notifications by pressing the "Check for notifcations" button.
+The advanced example demonstrates how you might implement a completely bespoke iNotify interface using the iNotifyDelegate methods. Automatic checking is disabled and instead the user can opt to download notifications by pressing the "Check for notifications" button.
 
 When pressed, the app display a progress wheel and then prints the notifications in a console underneath the button.
 

@@ -101,6 +101,7 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
     id<iNotifyDelegate> __weak_delegate _delegate;
     id _visibleAlert;
     BOOL _currentlyChecking;
+    NSImage *_customIcon;
 }
 #endif
 
@@ -136,6 +137,8 @@ static NSString *const iNotifyMessageMaxVersionKey = @"MaxVersion";
 @property (nonatomic, strong) NSDate *lastChecked;
 @property (nonatomic, strong) NSDate *lastReminded;
 @property (nonatomic, weak_delegate) id<iNotifyDelegate> delegate;
+
+@property (nonatomic, strong) NSImage *customIcon;
 
 //manually control behaviour
 - (NSString *)nextNotificationInDict:(NSDictionary *)dict;
